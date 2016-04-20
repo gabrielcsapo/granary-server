@@ -33,7 +33,7 @@ app.post('/freight/check', freightRoutes.check);
 app.post('/freight/download', freightRoutes.download);
 app.post('/freight/track', freightRoutes.track);
 
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/static', express.static(path.join(__dirname, 'views/static')));
 app.get('/storage/*', freightAuth.middleware, bundleDownload);
 app.get('/', freightAuth.middleware, index);
 // TODO: temporary, quick way to add delete
@@ -43,7 +43,6 @@ app.use('/freights', kue.app);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
-
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
