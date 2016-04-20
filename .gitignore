@@ -2,3 +2,4 @@ node_modules
 storage
 .vagrant
 .DS_Store
+npm-debug.log

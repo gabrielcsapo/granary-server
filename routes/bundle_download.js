@@ -7,7 +7,10 @@ module.exports = function (log, conf) {
     var fileName = null;
     try {
       fileName = req.route.params[0];
-    } catch (e) {}
+    } catch (e) {
+        res.status(500);
+        res.send(e);
+    }
 
     log.debug('UI Bundle Download request', fileName);
 
