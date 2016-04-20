@@ -23,7 +23,7 @@ module.exports = function (log, conf) {
 
     fs.exists(filePath, function (exists) {
       if (exists) {
-        return res.sendfile(filePath);
+        return res.sendFile(filePath);
       } else {
         return res.send(404);
       }

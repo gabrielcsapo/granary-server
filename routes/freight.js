@@ -76,7 +76,7 @@ module.exports = function (log, conf) {
       fs.exists(hashFile, function (exists) {
         if (exists) {
           log.debug('Download bundle:', hashFile);
-          return res.sendfile(hashFile);
+          return res.sendFile(hashFile);
         } else {
           log.debug('Bundle does not exist:', hashFile);
           return res.send(404);
