@@ -9,3 +9,4 @@ source ~/.profile;
 nvm install 0.10;
 
 npm install npm@3;
+sudo apt-get install git;

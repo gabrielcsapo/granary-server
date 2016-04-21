@@ -13,8 +13,8 @@ process.env.FREIGHT_PASSWORD = conf.get('password');
 var index = require('./routes/index')(log, conf);
 var bundleDelete = require('./routes/bundle_delete')(log, conf);
 var bundleDownload = require('./routes/bundle_download')(log, conf);
-var freightRoutes = require('./routes/freight')(log, conf);
-var freightAuth = require('./lib/auth')(log, conf);
+var granaryRoutes = require('./routes/granary')(log, conf);
+var granaryAuth = require('./lib/auth')(log, conf);
 
 var app = express();
 app.conf = conf;
@@ -29,17 +29,17 @@ var bodyParserOptions = {
 app.use(bodyParser.json(bodyParserOptions));
 app.use(bodyParser.urlencoded(bodyParserOptions));
 
-app.post('/freight/check', freightRoutes.check);
-app.post('/freight/download', freightRoutes.download);
-app.post('/freight/track', freightRoutes.track);
+app.post('/granary/check', granaryRoutes.check);
+app.post('/granary/download', granaryRoutes.download);
+app.post('/granary/track', granaryRoutes.track);
 
 app.use('/static', express.static(path.join(__dirname, 'views/static')));
-app.get('/storage/*', freightAuth.middleware, bundleDownload);
-app.get('/', freightAuth.middleware, index);
+app.get('/storage/*', granaryAuth.middleware, bundleDownload);
+app.get('/', granaryAuth.middleware, index);
 // TODO: temporary, quick way to add delete
-app.get('/ui/delete/:file', freightAuth.middleware, bundleDelete);
-app.use(freightAuth.middleware);
-app.use('/freights', kue.app);
+app.get('/ui/delete/:file', granaryAuth.middleware, bundleDelete);
+app.use(granaryAuth.middleware);
+app.use('/granarys', kue.app);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
