@@ -20,7 +20,7 @@ module.exports = function (log, conf) {
 
   FreightRoutes.check = function (req, res) {
     if (! req.body && ! req.body.project && ! req.body.project.name) {
-      return res.send(404);
+      return res.sendStatus(404);
     }
 
     var project = req.body.project;
@@ -30,14 +30,14 @@ module.exports = function (log, conf) {
     // storage directory for projects
     project.storageDir = conf.get('storage');
     // path where tar.gz will be saved
-    project.bundlePath = path.join(project.storageDir, project.name + '-' + project.hash + '.tar.gz');
-    project.productionBundlePath = path.join(project.storageDir, project.name + '-production-' + project.hash + '.tar.gz');
+    project.bundlePath = path.join(project.storageDir, project.name, project.hash + '.tar.gz');
+    project.productionBundlePath = path.join(project.storageDir, project.name, 'production-' + project.hash + '.tar.gz');
     // temp storage directory where things install to
     project.tempPath = path.join(project.storageDir, project.hash);
 
     log.debug('Incoming Project', project, extra);
 
-    // check if Freight file exists
+    // check if Granary file exists
     fs.exists(project.bundlePath, function (bundleExists) {
       var response = {
         creating: false,
@@ -61,16 +61,15 @@ module.exports = function (log, conf) {
       }
 
       return res.json(response);
-
     });
   };
 
   FreightRoutes.download = function (req, res) {
     log.debug('Download request', req.body);
     if (req.body.hash) {
-      var hashFile = path.join(conf.get('storage'), req.body.name + '-' + req.body.hash + '.tar.gz');
+      var hashFile = path.join(conf.get('storage'), req.body.name, req.body.hash + '.tar.gz');
       if (req.body.options && req.body.options.production === 'true') {
-        hashFile = path.join(conf.get('storage'), req.body.name + '-production-' + req.body.hash + '.tar.gz');
+        hashFile = path.join(conf.get('storage'), req.body.name, 'production-' + req.body.hash + '.tar.gz');
       }
 
       fs.exists(hashFile, function (exists) {
@@ -79,12 +78,12 @@ module.exports = function (log, conf) {
           return res.sendFile(hashFile);
         } else {
           log.debug('Bundle does not exist:', hashFile);
-          return res.send(404);
+          return res.sendStatus(404);
         }
       });
     } else {
       log.debug('Hash not set.');
-      return res.send(404);
+      return res.sendStatus(404);
     }
 
   };
@@ -95,7 +94,7 @@ module.exports = function (log, conf) {
 
       if (! freightAuth.checkPassword(req.body.password)) {
         log.debug('Password does not match');
-        return res.send(403);
+        return res.sendStatus(403);
       }
 
       var extraOptions = {
@@ -107,16 +106,16 @@ module.exports = function (log, conf) {
           // fetch $REPO, run freight on it
           // keep fetching the master branch, run freight on it
           log.debug('Cannot track repository: ', err);
-          return res.send(500);
+          return res.sendStatus(500);
         } else {
-          return res.send(200);
+          return res.sendStatus(200);
         }
       });
 
 
     } else {
       log.debug('Repository or password not set');
-      return res.send(500);
+      return res.sendStatus(500);
     }
 
   };

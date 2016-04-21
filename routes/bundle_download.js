@@ -19,6 +19,7 @@ module.exports = function (log, conf) {
     }
 
     fileName = fileName.replace(/\//g, '_');
+    log.info(fileName);
     var filePath = path.join(conf.get('storage'), fileName);
 
     fs.exists(filePath, function (exists) {

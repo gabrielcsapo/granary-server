@@ -12,7 +12,7 @@ module.exports = function (log, conf) {
     var storage = conf.get('storage');
 
     var data = {
-      title: 'Freight Server',
+      title: 'Granary Server',
       process: {
         heap: filesize(memory.heapUsed)
       }

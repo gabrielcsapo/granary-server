@@ -23,11 +23,13 @@ app.log = log;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var bodyParserOptions = {
-  limit: conf.get('limit') + 'kb'
-};
-app.use(bodyParser.json(bodyParserOptions));
-app.use(bodyParser.urlencoded(bodyParserOptions));
+app.use(bodyParser.json({
+    limit: conf.get('limit') + 'kb'
+}));
+app.use(bodyParser.urlencoded({
+    limit: conf.get('limit') + 'kb',
+    extended: true
+}));
 
 app.post('/granary/check', granaryRoutes.check);
 app.post('/granary/download', granaryRoutes.download);
