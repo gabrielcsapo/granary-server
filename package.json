@@ -2,7 +2,7 @@
   "name": "granary-server",
   "version": "0.0.0",
   "scripts": {
-    "test": "npm run clean;mocha;",
+    "test": "npm run clean;./node_modules/mocha/bin/mocha;",
     "clean": "redis-cli flushall;rm -rf storage/**;",
     "start": "redis-server & node ./bin/granary-server | bunyan -o short"
   },
@@ -28,7 +28,8 @@
     "rimraf": "^2.5.2"
   },
   "devDependencies": {
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
   },
   "repository": {
     "type": "git",
