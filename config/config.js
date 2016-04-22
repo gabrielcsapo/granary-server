@@ -8,7 +8,7 @@ module.exports = function () {
 
   // Check if we need to auto configure for a fast start.
   var env = process.env.NODE_ENV || 'dev';
-  var configFile = process.env.FREIGHT_CONFIG || __dirname + '/' + env + '.json';
+  var configFile = process.env.GRANARY_CONFIG || __dirname + '/' + env + '.json';
 
   require('./autoconfig')(configFile);
 

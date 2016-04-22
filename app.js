@@ -7,9 +7,6 @@ var conf = require('./config/config')();
 var log = require('./lib/log')(conf);
 var kue = require('kue');
 
-// TODO: move this? this is needed for the server to be able to track bundles
-process.env.FREIGHT_PASSWORD = conf.get('password');
-
 var index = require('./routes/index')(log, conf);
 var bundleDelete = require('./routes/bundle_delete')(log, conf);
 var bundleDownload = require('./routes/bundle_download')(log, conf);
@@ -41,7 +38,7 @@ app.get('/', granaryAuth.middleware, index);
 // TODO: temporary, quick way to add delete
 app.get('/ui/delete/:file', granaryAuth.middleware, bundleDelete);
 app.use(granaryAuth.middleware);
-app.use('/granarys', kue.app);
+app.use('/granaries', kue.app);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {
