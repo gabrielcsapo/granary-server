@@ -29,11 +29,11 @@ describe('granary-server', function() {
         cli.kill();
     });
 
-    // require('./basic/basic');
-    // require('./create/create');
-    // require('./bower/error_bower');
+    require('./basic/basic');
+    require('./create/create');
+    require('./bower/error_bower');
     require('./extract/extract');
-    require('./track/track');
+    // require('./track/track');
     require('./error/error');
 });
 
