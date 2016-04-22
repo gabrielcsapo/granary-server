@@ -2,6 +2,7 @@
   "name": "granary-server",
   "version": "0.0.0",
   "scripts": {
+    "test": "npm run clean;mocha;",
     "clean": "redis-cli flushall;rm -rf storage/**;",
     "start": "redis-server & node ./bin/granary-server | bunyan -o short"
   },
@@ -18,7 +19,7 @@
     "cross-spawn-async": "^2.1.6",
     "express": "^4.13.4",
     "filesize": "2.0.3",
-    "freight": "^0.5.2",
+    "granary": "0.0.1",
     "jade": "^1.11.0",
     "kue": "^0.10.5",
     "mkdirp": "^0.5.1",
@@ -26,7 +27,9 @@
     "npm": "^3.0.0",
     "rimraf": "^2.5.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gabrielcsapo/granary-server.git"

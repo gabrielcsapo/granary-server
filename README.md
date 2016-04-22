@@ -1,4 +1,4 @@
-# granary-server
+# granary-server [![Build Status](https://travis-ci.org/gabrielcsapo/granary-server.svg?branch=master)](https://travis-ci.org/gabrielcsapo/granary-server)
 
 > based on https://github.com/node-freight/freight-server
 > forked and renamed due to lack of culpability in helping add functionality to freight
