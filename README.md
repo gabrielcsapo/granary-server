@@ -5,3 +5,31 @@
 > hopefully will be able to merge upstream once features and bugs are fixed.
 
 ![Logo](./views/static/img/logo.png)
+
+# Quick Server Setup
+
+```
+git clone https://github.com/gabrielcsapo/granary-server.git
+vagrant up;
+vagrant ssh;
+npm install;
+npm start
+```
+
+
+### Configure
+
+#### Password
+
+Freight Server automatically configures a password for you. You can change it by modifying the [dev.json](config/dev.json-dist) file.
+
+A password setting of `""` (empty string) indicates that the Freight Server will not require a password for any actions.
+
+Server will start on port `8872`. You should be able to navigate to the dashboard:
+
+![](doc/main-page.png)
+
+#### Other Configuration
+
+See [config/config.js](config/config.js#L12) for available
+configuration options and environment variables. The Freight Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.

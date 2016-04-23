@@ -4,3 +4,4 @@ storage
 .DS_Store
 npm-debug.log
 temp/**
+dump.rdb
