@@ -2,7 +2,6 @@
   "name": "granary-server",
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "npm install",
     "test": "npm run clean;./node_modules/eslint/bin/eslint .;./node_modules/mocha/bin/mocha;",
     "clean": "redis-cli flushall;rm -rf storage/**;",
     "start": "redis-server & node ./bin/granary-server | bunyan -o short"
