@@ -1,5 +1,5 @@
 {
-  "name": "granary-server",
+  "name": "sample-project",
   "version": "0.0.0",
   "scripts": {
     "test": "npm run clean;./node_modules/eslint/bin/eslint.js .;./node_modules/mocha/bin/mocha;",

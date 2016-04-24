@@ -161,37 +161,37 @@ describe('create', function () {
   });
 
   it('it should not generate blank bundles', function (done) {
-    this.timeout(20000);
+    this.timeout(200000);
+
+    process.env.GRANARY_PASSWORD = 'testing';
 
     process.chdir(path.resolve(__dirname, '..') + '/fixtures/projectnpmerror');
     var pkg = JSON.parse(fs.readFileSync('package.json'));
     pkg.name = pkg.name + Date.now();
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-    rimraf('node_modules', done);
+    rimraf('node_modules', function() {
+        exec(executable + ' create -u http://localhost:8872',
+          function (error, stdout, stderr) {
+            assert.equal(stderr, '');
 
-    process.env.GRANARY_PASSWORD = 'testing';
+            var bundleReady = function () {
+              exec(executable + ' -u http://localhost:8872',
+                function (error, stdout, stderr) {
+                  assert.equal(stderr, '');
+                  assert.notOk(fs.existsSync('npm-debug.log'), 'npm-debug.log should not exist');
+                  var pkg = JSON.parse(fs.readFileSync('package.json'));
+                  pkg.name = projectName;
+                  fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+                  process.chdir(currentDir);
+                  done();
+                });
+            };
 
-    exec(executable + ' create -u http://localhost:8872',
-      function (error, stdout, stderr) {
-        assert.equal(stderr, '');
-
-        var bundleReady = function () {
-          exec(executable + ' -u http://localhost:8872',
-            function (error, stdout, stderr) {
-              assert.equal(stderr, '');
-              assert.notOk(fs.existsSync('npm-debug.log'), 'npm-debug.log should not exist');
-              var pkg = JSON.parse(fs.readFileSync('package.json'));
-              pkg.name = projectName;
-              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-              process.chdir(currentDir);
-              done();
-            });
-        };
-
-        setTimeout(function () {
-          bundleReady();
-        }, 7000);
+            setTimeout(function () {
+              bundleReady();
+            }, 7000);
+          });
       });
-  });
+    });
 
 });
