@@ -172,8 +172,6 @@ describe('create', function () {
     rimraf('node_modules', function() {
         exec(executable + ' create -u http://localhost:8872',
           function (error, stdout, stderr) {
-            console.log(stderr);
-            console.log(error);
             assert.equal(stderr, '');
 
             var bundleReady = function () {
@@ -184,7 +182,6 @@ describe('create', function () {
                   var pkg = JSON.parse(fs.readFileSync('package.json'));
                   pkg.name = projectName;
                   fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-                  process.chdir(currentDir);
                   done();
                 });
             };
