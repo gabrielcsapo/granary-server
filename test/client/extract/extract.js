@@ -5,9 +5,9 @@ var exec = require('child_process').exec;
 var assert = require('chai').assert;
 
 var executable = process.GRANARY;
+var currentDir = process.cwd();
 
 describe('extract', function () {
-  var currentDir = process.cwd();
   var projectName = 'sample-project';
 
   beforeEach(function (done) {
