@@ -172,6 +172,8 @@ describe('create', function () {
     rimraf('node_modules', function() {
         exec(executable + ' create -u http://localhost:8872',
           function (error, stdout, stderr) {
+            console.log(stderr);
+            console.log(error);
             assert.equal(stderr, '');
 
             var bundleReady = function () {
