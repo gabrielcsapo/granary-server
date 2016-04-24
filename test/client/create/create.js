@@ -20,17 +20,14 @@ describe('create', function () {
   });
 
   afterEach(function (done) {
-    if(fs.readFileSync('package.json')) {
-        var pkg = JSON.parse(fs.readFileSync('package.json'));
-        pkg.name = projectName;
-        fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-        rimraf('node_modules', function() {
-            process.chdir(currentDir);
-            done();
-        });
-    } else {
+    this.timeout(15000);
+    var pkg = JSON.parse(fs.readFileSync('package.json'));
+    pkg.name = projectName;
+    fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+    rimraf('node_modules', function() {
+        process.chdir(currentDir);
         done();
-    }
+    });
   });
 
   it('should ask for password, fail on wrong password', function (done) {
