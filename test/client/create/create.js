@@ -13,7 +13,6 @@ describe('create', function () {
   beforeEach(function (done) {
     process.env.GRANARY_PASSWORD = null;
     // go to the fixture project
-    console.log(path.resolve(__dirname, '..') + '/fixtures/project1');
     process.chdir(path.resolve(__dirname, '..') + '/fixtures/project1');
     // force project update
     var pkg = JSON.parse(fs.readFileSync('package.json'));
@@ -42,7 +41,6 @@ describe('create', function () {
 
     exec('GRANARY_PASSWORD=wrong ' + executable + ' create -u http://localhost:8872',
       function (error, stdout, stderr) {
-        console.log(stdout);
         assert.equal(stderr, 'Wrong Granary Server password.\n');
         done();
       });
@@ -136,6 +134,74 @@ describe('create', function () {
 
         bundleReady();
 
+      });
+  });
+
+  it('it should not generate blank bundles, bower-error', function (done) {
+    process.chdir(path.resolve(__dirname, '..') + '/fixtures/projectbowererror');
+    var pkg = JSON.parse(fs.readFileSync('bower.json'));
+    pkg.name = pkg.name + Date.now();
+    fs.writeFileSync('bower.json', JSON.stringify(pkg, null, 2));
+
+    this.timeout(20000);
+    process.env.GRANARY_PASSWORD = 'testing';
+
+    exec(executable + ' create -u http://localhost:8872',
+      function (error, stdout, stderr) {
+        assert.equal(stderr, '');
+
+        var bundleReady = function () {
+          exec(executable + ' -u http://localhost:8872',
+            function (error, stdout, stderr) {
+              assert.equal(stderr, '');
+              assert.isTrue(stdout.indexOf('Bundle does not exist for this project') > 0);
+              var pkg = JSON.parse(fs.readFileSync('bower.json'));
+              pkg.name = projectName;
+              fs.writeFileSync('bower.json', JSON.stringify(pkg, null, 2));
+              process.chdir(currentDir);
+              done();
+            });
+        };
+
+        // wait for bundle install
+        setTimeout(function () {
+          bundleReady();
+        }, 7000);
+      });
+  });
+
+  it('it should not generate blank bundles', function (done) {
+    this.timeout(20000);
+
+    process.chdir(path.resolve(__dirname, '..') + '/fixtures/projectnpmerror');
+    var pkg = JSON.parse(fs.readFileSync('package.json'));
+    pkg.name = pkg.name + Date.now();
+    fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+    rimraf('node_modules', done);
+
+    process.env.GRANARY_PASSWORD = 'testing';
+
+    exec(executable + ' create -u http://localhost:8872',
+      function (error, stdout, stderr) {
+        assert.equal(stderr, '');
+
+        var bundleReady = function () {
+          exec(executable + ' -u http://localhost:8872',
+            function (error, stdout, stderr) {
+              assert.equal(stderr, '');
+              assert.notOk(fs.existsSync('npm-debug.log'), 'npm-debug.log should not exist');
+              var pkg = JSON.parse(fs.readFileSync('package.json'));
+              pkg.name = projectName;
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+              process.chdir(currentDir);
+              done();
+            });
+        };
+
+        // wait for bundle install
+        setTimeout(function () {
+          bundleReady();
+        }, 7000);
       });
   });
 
