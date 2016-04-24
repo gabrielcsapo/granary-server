@@ -3,6 +3,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var exec = require('child_process').exec;
 var assert = require('chai').assert;
+
 var executable = process.GRANARY;
 
 describe('extract', function () {
@@ -11,24 +12,17 @@ describe('extract', function () {
 
   beforeEach(function (done) {
     process.env.GRANARY_PASSWORD = null;
-    // go to the fixture project
     process.chdir(path.resolve(__dirname, '..') + '/fixtures/project2');
-    // force project update
     var pkg = JSON.parse(fs.readFileSync('package.json'));
-    // update project name
     pkg.name = pkg.name + Date.now();
-    // write new project name
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-    // clear node_modules for the sample project
     rimraf('node_modules', function () {
       rimraf('app', done);
     });
   });
 
   afterEach(function () {
-    // force project update
     var pkg = JSON.parse(fs.readFileSync('package.json'));
-    // set the old project name
     pkg.name = projectName;
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
     process.chdir(currentDir);
@@ -64,7 +58,6 @@ describe('extract', function () {
                   assert.notOk(fs.existsSync('app/bower_components/bower.json'), 'bower.json wrong');
                   assert.ok(fs.existsSync('bower.json'), 'keep the original bower.json');
                   assert.ok(fs.existsSync('.bowerrc'), 'keep the original .bowerrc');
-                  // npm shrinkwrap test: inherits must be 2.0.0
                   var shrinkwrapPkg = JSON.parse(fs.readFileSync('node_modules/inherits/package.json'));
                   assert.equal(shrinkwrapPkg.version, '2.0.0');
 
@@ -189,7 +182,6 @@ describe('extract', function () {
                   assert.notOk(fs.existsSync('app/bower_components/bower.json'), 'bower.json wrong');
                   assert.ok(fs.existsSync('bower.json'), 'keep the original bower.json');
                   assert.ok(fs.existsSync('.bowerrc'), 'keep the original .bowerrc');
-                  // npm shrinkwrap test: inherits must be 2.0.0
                   var shrinkwrapPkg = JSON.parse(fs.readFileSync('node_modules/inherits/package.json'));
                   assert.equal(shrinkwrapPkg.version, '2.0.0');
 

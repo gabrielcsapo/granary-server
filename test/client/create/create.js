@@ -12,22 +12,15 @@ describe('create', function () {
 
   beforeEach(function (done) {
     process.env.GRANARY_PASSWORD = null;
-    // go to the fixture project
     process.chdir(path.resolve(__dirname, '..') + '/fixtures/project1');
-    // force project update
     var pkg = JSON.parse(fs.readFileSync('package.json'));
-    // update project name
     pkg.name = pkg.name + Date.now();
-    // write new project name
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-    // clear node_modules for the sample project
     rimraf('node_modules', done);
   });
 
   afterEach(function (done) {
-    // force project update
     var pkg = JSON.parse(fs.readFileSync('package.json'));
-    // set the old project name
     pkg.name = projectName;
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
     rimraf('node_modules', function() {
@@ -64,14 +57,12 @@ describe('create', function () {
         assert.equal(stdout.substring(0, 96), out);
 
         var bundleReady = function() {
-          // extract bundle
           exec(executable + ' -u http://localhost:8872',
             function (error, stdout, stderr) {
               assert.equal(stderr, '');
 
               fs.exists('node_modules/inherits/package.json', function (exists) {
                 if (! exists) {
-                  // didn't get the bunle yet, check again
                   setTimeout(function () {
                     bundleReady();
                   }, 1000);
@@ -109,14 +100,12 @@ describe('create', function () {
         assert.equal(stdout.substring(0, 96), out);
 
         var bundleReady = function() {
-          // extract bundle
           exec(executable + ' -u http://localhost:8872',
             function (error, stdout, stderr) {
               assert.equal(stderr, '');
 
               fs.exists('node_modules/inherits/package.json', function (exists) {
                 if (! exists) {
-                  // didn't get the bunle yet, check again
                   setTimeout(function () {
                     bundleReady();
                   }, 1000);
@@ -138,12 +127,13 @@ describe('create', function () {
   });
 
   it('it should not generate blank bundles, bower-error', function (done) {
+    this.timeout(150000);
+
     process.chdir(path.resolve(__dirname, '..') + '/fixtures/projectbowererror');
     var pkg = JSON.parse(fs.readFileSync('bower.json'));
     pkg.name = pkg.name + Date.now();
     fs.writeFileSync('bower.json', JSON.stringify(pkg, null, 2));
 
-    this.timeout(20000);
     process.env.GRANARY_PASSWORD = 'testing';
 
     exec(executable + ' create -u http://localhost:8872',
@@ -163,7 +153,6 @@ describe('create', function () {
             });
         };
 
-        // wait for bundle install
         setTimeout(function () {
           bundleReady();
         }, 7000);
@@ -198,7 +187,6 @@ describe('create', function () {
             });
         };
 
-        // wait for bundle install
         setTimeout(function () {
           bundleReady();
         }, 7000);

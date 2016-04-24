@@ -27,10 +27,8 @@ describe('granary-server', function() {
         cli.kill();
     });
 
-    require('./client/cli/cli');
-    require('./client/create/create');
-    require('./client/extract/extract');
-    // require('./client/track/track');
+    require('./client');
+    
 });
 
 process.on('exit', function() {
