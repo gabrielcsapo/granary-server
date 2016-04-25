@@ -7,9 +7,6 @@ var conf = require('./config/config')();
 var log = require('./lib/log')(conf);
 var kue = require('kue');
 
-
-var Auth = require('./lib/auth')(log, conf);
-
 var app = express();
 app.conf = conf;
 app.log = log;
@@ -27,10 +24,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 var index = require('./routes/index')(app, log, conf);
-app.use(Auth.middleware);
+
 app.use('/granaries', kue.app);
 
-/// catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

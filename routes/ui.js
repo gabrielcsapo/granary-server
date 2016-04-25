@@ -27,10 +27,11 @@ module.exports = function(log, conf) {
                         if (err) {
                             log.error(err);
                         } else {
-                            log.info('Bundle Deleted:', req.params.file);
+                            log.info('UI Bundle Deleted:', req.params.file);
                         }
                         res.redirect('/');
-                    });
+                    }
+                );
             } else {
                 res.sendStatus(404);
             }

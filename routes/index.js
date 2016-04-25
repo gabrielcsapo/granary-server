@@ -14,4 +14,6 @@ module.exports = function(app, log, conf) {
     app.post('/granary/check', Granary.check);
     app.post('/granary/download', Granary.download);
     app.post('/granary/track', Granary.track);
+
+    app.use(Auth.middleware);
 };
