@@ -124,6 +124,8 @@ module.exports = function(log, conf) {
                 getSearch().query(project.hash).end(function(err, ids) {
                     if (ids.length == 0) {
                         if (!bundleExists || extra.force === 'true') {
+                            fs.unlinkSync(project.bundlePath);
+                            fs.unlinkSync(project.productionBundlePath);
                             response.creating = true;
                             response.hash = project.hash;
                             freighter.create(project, extra);
