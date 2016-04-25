@@ -192,11 +192,6 @@ module.exports = function(log, conf) {
         if (req.body && req.body.repository && req.body.password && req.body.branch) {
             log.debug('Tracking request:', req.body);
 
-            if (!freightAuth.checkPassword(req.body.password)) {
-                log.debug('Password does not match');
-                return res.sendStatus(403);
-            }
-
             var extraOptions = {
                 trackDirectory: req.body.trackDirectory
             };
@@ -211,7 +206,6 @@ module.exports = function(log, conf) {
                     return res.sendStatus(200);
                 }
             });
-
 
         } else {
             log.debug('Repository or password not set');
