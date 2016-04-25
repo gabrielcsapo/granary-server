@@ -1,3 +1,7 @@
+* {
+    border-radius: 0px !important;
+}
+
 .intro h1{
   float: left;
 }

@@ -7,11 +7,8 @@ var conf = require('./config/config')();
 var log = require('./lib/log')(conf);
 var kue = require('kue');
 
-var index = require('./routes/index')(log, conf);
-var bundleDelete = require('./routes/bundle_delete')(log, conf);
-var bundleDownload = require('./routes/bundle_download')(log, conf);
-var granaryRoutes = require('./routes/granary')(log, conf);
-var granaryAuth = require('./lib/auth')(log, conf);
+
+var Auth = require('./lib/auth')(log, conf);
 
 var app = express();
 app.conf = conf;
@@ -19,6 +16,7 @@ app.log = log;
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use('/static', express.static(path.join(__dirname, 'views/static')));
 
 app.use(bodyParser.json({
     limit: conf.get('limit') + 'kb'
@@ -28,16 +26,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.post('/granary/check', granaryRoutes.check);
-app.post('/granary/download', granaryRoutes.download);
-app.post('/granary/track', granaryRoutes.track);
-
-app.use('/static', express.static(path.join(__dirname, 'views/static')));
-app.get('/storage/*', granaryAuth.middleware, bundleDownload);
-app.get('/', granaryAuth.middleware, index);
-// TODO: temporary, quick way to add delete
-app.get('/ui/delete/:file', granaryAuth.middleware, bundleDelete);
-app.use(granaryAuth.middleware);
+var index = require('./routes/index')(app, log, conf);
+app.use(Auth.middleware);
 app.use('/granaries', kue.app);
 
 /// catch 404 and forward to error handler
