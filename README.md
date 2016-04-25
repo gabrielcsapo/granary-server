@@ -16,6 +16,19 @@ npm install;
 npm start
 ```
 
+### Usage
+
+> starting up the server with defaults
+
+```
+npm start
+```
+
+> starting up the server with custom config
+
+```
+GRANARY_CONFIG={location} npm start
+```
 
 ### Configure
 
