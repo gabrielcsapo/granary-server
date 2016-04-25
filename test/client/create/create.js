@@ -149,6 +149,7 @@ describe('create', function () {
               var pkg = JSON.parse(fs.readFileSync('bower.json'));
               pkg.name = projectName;
               fs.writeFileSync('bower.json', JSON.stringify(pkg, null, 2));
+              process.chdir(path.resolve(__dirname, '..') + '/fixtures/project1');
               done();
             });
         };
