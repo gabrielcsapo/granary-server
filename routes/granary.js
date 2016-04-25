@@ -25,6 +25,19 @@ module.exports = function(log, conf) {
         return search = reds.createSearch(jobs.client.getKey('search'));
     }
 
+    function getProjectDetails(project) {
+        // TODO: Switch to something else or keep md5?
+        project.hash = crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
+        // storage directory for projects
+        project.storageDir = conf.get('storage');
+        // path where tar.gz will be saved
+        project.bundlePath = path.join(project.storageDir, project.name + '-' + project.hash + '.tar.gz');
+        project.productionBundlePath = path.join(project.storageDir, project.name + '-production-' + project.hash + '.tar.gz');
+        // temp storage directory where things install to
+        project.tempPath = path.join(project.storageDir, project.hash);
+        return project;
+    }
+
     processor.setup(jobs);
 
     var freighter = require('../lib/freighter')(log, conf, jobs);
@@ -93,15 +106,8 @@ module.exports = function(log, conf) {
 
         var project = req.body.project;
         var extra = req.body.extra;
-        // TODO: Switch to something else or keep md5?
-        project.hash = crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
-        // storage directory for projects
-        project.storageDir = conf.get('storage');
-        // path where tar.gz will be saved
-        project.bundlePath = path.join(project.storageDir, project.name + '-' + project.hash + '.tar.gz');
-        project.productionBundlePath = path.join(project.storageDir, project.name + '-production-' + project.hash + '.tar.gz');
-        // temp storage directory where things install to
-        project.tempPath = path.join(project.storageDir, project.hash);
+
+        project = getProjectDetails(project);
 
         log.debug('Incoming Project', project, extra);
 
@@ -124,8 +130,10 @@ module.exports = function(log, conf) {
                 getSearch().query(project.hash).end(function(err, ids) {
                     if (ids.length == 0) {
                         if (!bundleExists || extra.force === 'true') {
-                            fs.unlinkSync(project.bundlePath);
-                            fs.unlinkSync(project.productionBundlePath);
+                            try {
+                                fs.unlinkSync(project.bundlePath);
+                                fs.unlinkSync(project.productionBundlePath);
+                            } catch (ex) { /* doesn't matter if it fails */ }
                             response.creating = true;
                             response.hash = project.hash;
                             freighter.create(project, extra);
