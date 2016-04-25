@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var app = require('../app');
+var app = require('../index');
 app.set('port', app.conf.get('port'));
 
 var server = app.listen(app.get('port'), '::', function() {
