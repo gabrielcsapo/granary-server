@@ -7,7 +7,7 @@ module.exports = function(app, log, conf) {
         res.render('index', req.data);
     });
 
-    app.get('/storage/*', Auth.middleware, UI.download);
+    app.get('/ui/download/:file', Auth.middleware, UI.download);
     // TODO: temporary, quick way to add delete
     app.get('/ui/delete/:file', Auth.middleware, UI.delete);
 
