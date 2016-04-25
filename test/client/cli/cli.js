@@ -2,7 +2,7 @@ var exec = require('child_process').exec;
 var assert = require('chai').assert;
 
 var executable = process.GRANARY;
-console.log(executable);
+
 describe('cli', function () {
 
   it('should error with no url set', function (done) {
