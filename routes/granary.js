@@ -27,7 +27,7 @@ module.exports = function(log, conf) {
 
     function getProjectDetails(project) {
         // TODO: Switch to something else or keep md5?
-        project.hash = crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
+        project.hash = project.hash || crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
         // storage directory for projects
         project.storageDir = conf.get('storage');
         // path where tar.gz will be saved
@@ -182,26 +182,25 @@ module.exports = function(log, conf) {
 
     Routes.download = function(req, res) {
         log.debug('Download request', req.body);
-        if (req.body.hash) {
-            var hashFile = path.join(conf.get('storage'), req.body.name + '-' + req.body.hash + '.tar.gz');
-            if (req.body.options && req.body.options.production === 'true') {
-                hashFile = path.join(conf.get('storage'), req.body.name + '-production-' + req.body.hash + '.tar.gz');
-            }
-
-            fs.exists(hashFile, function(exists) {
-                if (exists) {
-                    log.debug('Download bundle:', hashFile);
-                    return res.sendFile(hashFile);
-                } else {
-                    log.debug('Bundle does not exist:', hashFile);
-                    return res.sendStatus(404);
-                }
-            });
-        } else {
-            log.debug('Hash not set.');
+        if (!req.body && !req.body.name) {
             return res.sendStatus(404);
         }
 
+        project = getProjectDetails(req.body);
+        var file = project.bundlePath;
+        if (req.body.options && req.body.options.production === 'true') {
+            file = project.productionBundlePath;
+        }
+
+        fs.exists(file, function(exists) {
+            if (exists) {
+                log.debug('Download bundle:', file);
+                return res.sendFile(file);
+            } else {
+                log.debug('Bundle does not exist:', file);
+                return res.sendStatus(404);
+            }
+        });
     };
 
     Routes.track = function(req, res) {
