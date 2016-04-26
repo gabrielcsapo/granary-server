@@ -5,7 +5,6 @@ var kue = require('kue');
 var Job = require('kue/lib/queue/job');
 var reds = require('reds');
 var filesize = require('filesize');
-var async = require('async');
 var moment = require('moment');
 
 module.exports = function(log, conf) {
@@ -52,6 +51,11 @@ module.exports = function(log, conf) {
 
         var data = {
             title: 'Granary Server',
+            projects: {},
+            count: {
+                projects: 0,
+                files: 0
+            },
             process: {
                 heap: filesize(memory.heapUsed)
             }
@@ -68,13 +72,7 @@ module.exports = function(log, conf) {
             });
 
             var counter = 0;
-            var data = {
-                projects: {},
-                count: {
-                    projects: folders.length,
-                    files: 0
-                }
-            };
+            data.count.project = folders.length;
 
             var done = function() {
                 if (counter == folders.length) {
@@ -86,7 +84,6 @@ module.exports = function(log, conf) {
             counter += folders.length;
             // TODO: clean this up
             folders.forEach(function(folder) {
-                console.log(folder);
                 fs.readdir(path.join(storage, folder), function(err, files) {
                     if (err) {
                         return;
@@ -186,7 +183,7 @@ module.exports = function(log, conf) {
             return res.sendStatus(404);
         }
 
-        project = getProjectDetails(req.body);
+        var project = getProjectDetails(req.body);
         var file = project.bundlePath;
         if (req.body.options && req.body.options.production === 'true') {
             file = project.productionBundlePath;

@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-var index = require('./routes/index')(app, log, conf);
+require('./routes/index')(app, log, conf);
 
 app.use('/granaries', kue.app);
 

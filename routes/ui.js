@@ -6,7 +6,7 @@ module.exports = function(log, conf) {
         download: function(req, res) {
             if (req.params.file) {
                 log.debug('UI Bundle Download request', req.params.file);
-                file = path.join(conf.get('storage'), req.params.file);
+                var file = path.join(conf.get('storage'), req.params.file);
                 fs.exists(file, function(exists) {
                     if (exists) {
                         return res.sendFile(file);
