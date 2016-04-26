@@ -31,8 +31,9 @@ module.exports = function(log, conf) {
         // storage directory for projects
         project.storageDir = conf.get('storage');
         // path where tar.gz will be saved
-        project.bundlePath = path.join(project.storageDir, project.name + '-' + project.hash + '.tar.gz');
-        project.productionBundlePath = path.join(project.storageDir, project.name + '-production-' + project.hash + '.tar.gz');
+        project.path = path.join(project.storageDir, project.name);
+        project.bundlePath = path.join(project.path, 'development-' + project.hash + '.tar.gz');
+        project.productionBundlePath = path.join(project.path, 'production-' + project.hash + '.tar.gz');
         // temp storage directory where things install to
         project.tempPath = path.join(project.storageDir, project.hash);
         return project;
@@ -56,46 +57,61 @@ module.exports = function(log, conf) {
             }
         };
 
-        fs.readdir(storage, function(err, files) {
+        fs.readdir(storage, function(err, folders) {
             if (err) {
                 log.error(err);
                 throw err;
             }
 
-            async.map(files,
-                function(file, complete) {
-                    fs.stat(path.join(storage, file), function(err, stat) {
-                        stat.size = filesize(stat.size);
-                        stat.download = '/storage/' + file;
-                        stat.ctime = moment(stat.ctime).format('MMMM Do YYYY, h:mm:ss a');
-                        if (file.indexOf('tar.gz') > -1) {
-                            complete(err, {
-                                name: file,
-                                details: stat
-                            });
-                        } else {
-                            complete(err, {});
-                        }
-                    });
-                },
-                function(err, results) {
-                    if (err) {
-                        log.error('Failed to get statistics on all bundle files');
-                        throw err;
-                    }
+            folders = folders.filter(function(folder) {
+                return fs.lstatSync(path.join(storage, folder)).isDirectory();
+            });
 
-                    var bundles = results.filter(function(file) {
-                        return file.hasOwnProperty('name');
-                    });
+            var counter = 0;
+            var data = {
+                projects: {},
+                count: {
+                    projects: folders.length,
+                    files: 0
+                }
+            };
 
-                    bundles.sort(function(a, b) {
-                        return b.details.mtime.getTime() - a.details.mtime.getTime();
-                    });
-
-                    data.files = bundles;
+            var done = function() {
+                if (counter == folders.length) {
                     req.data = data;
                     next();
+                }
+            }
+
+            counter += folders.length;
+            // TODO: clean this up
+            folders.forEach(function(folder) {
+                console.log(folder);
+                fs.readdir(path.join(storage, folder), function(err, files) {
+                    if (err) {
+                        return;
+                    } else {
+                        counter += files.length;
+                        files.forEach(function(file) {
+                            fs.stat(path.join(storage, folder, file), function(err, stat) {
+                                stat.size = filesize(stat.size);
+                                stat.download = '/storage/' + file;
+                                stat.ctime = moment(stat.ctime).format('MMMM Do YYYY, h:mm:ss a');
+                                if(!data.projects[folder]) {
+                                    data.projects[folder] = [];
+                                }
+                                data.projects[folder].push({
+                                    name: file,
+                                    details: stat
+                                });
+                                data.count.files += 1;
+                                counter -= 1;
+                                done();
+                            });
+                        });
+                    }
                 });
+            });
         });
     }
 

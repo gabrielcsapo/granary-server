@@ -11,24 +11,26 @@ block content
             a.btn.btn-primary.btn(href='http://github.com/gabrielcsapo/granary-server') About Granary
         blockquote
             p
-                | I have #{files.length} bundle(s) at the moment and I'm using around #{process.heap} of memory.
+                | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
             small
                 | Granary Server
         h1 Bundles
-        table.table.table-striped.table-hover
-            thead
-                tr
-                    th Bundle Name
-                    th Created
-                    th Size
-                    th File
-            tbody
-                for file in files
+        each project, name in projects
+            h3 #{name}
+            table.table.table-striped.table-hover
+                thead
                     tr
-                        td
-                            strong=file.name
-                        td=file.details.ctime
-                        td=file.details.size
-                        td
-                            a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{file.name}') Delete
-                            a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{file.name}') Download
+                        th Bundle Name
+                        th Created
+                        th Size
+                        th File
+                tbody
+                    for file in project
+                        tr
+                            td
+                                strong=file.name
+                            td=file.details.ctime
+                            td=file.details.size
+                            td
+                                a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{file.name}') Delete
+                                a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{file.name}') Download
