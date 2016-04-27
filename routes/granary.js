@@ -33,6 +33,7 @@ module.exports = function(log, conf) {
         project.path = path.join(project.storageDir, project.name);
         project.bundlePath = path.join(project.path, 'development-' + project.hash + '.tar.gz');
         project.productionBundlePath = path.join(project.path, 'production-' + project.hash + '.tar.gz');
+        project.downloadPath = path.join(project.name, 'development-' + project.hash + '.tar.gz');
         // temp storage directory where things install to
         project.tempPath = path.join(project.storageDir, project.hash);
         return project;
@@ -135,6 +136,7 @@ module.exports = function(log, conf) {
             if (bundleExists) {
                 response.available = true;
                 response.hash = project.hash;
+                response.project = project;
             }
 
             if (freightAuth.checkPassword(extra.password) && extra.create === 'true') {
