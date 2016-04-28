@@ -4,6 +4,8 @@ var path = require('path');
 var kue = require('kue');
 var Job = require('kue/lib/queue/job');
 var reds = require('reds');
+var filesize = require('filesize');
+var moment = require('moment');
 
 module.exports = function(log, conf) {
 
@@ -22,29 +24,104 @@ module.exports = function(log, conf) {
         return search = reds.createSearch(jobs.client.getKey('search'));
     }
 
+    function getProjectDetails(project) {
+        // TODO: Switch to something else or keep md5?
+        project.hash = project.hash || crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
+        // storage directory for projects
+        project.storageDir = conf.get('storage');
+        // path where tar.gz will be saved
+        project.path = path.join(project.storageDir, project.name);
+        project.bundlePath = path.join(project.path, 'development-' + project.hash + '.tar.gz');
+        project.productionBundlePath = path.join(project.path, 'production-' + project.hash + '.tar.gz');
+        project.downloadPath = path.join(project.name, 'development-' + project.hash + '.tar.gz');
+        // temp storage directory where things install to
+        project.tempPath = path.join(project.storageDir, project.hash);
+        return project;
+    }
+
     processor.setup(jobs);
 
     var freighter = require('../lib/freighter')(log, conf, jobs);
     var tracker = require('../lib/tracker')(log, conf, jobs);
     var freightAuth = require('../lib/auth')(log, conf);
-    var FreightRoutes = {};
+    var Routes = {};
 
-    FreightRoutes.check = function(req, res) {
+    Routes.usage = function(req, res, next) {
+        var memory = process.memoryUsage();
+        var storage = conf.get('storage');
+
+        var data = {
+            title: 'Granary Server',
+            projects: {},
+            count: {
+                projects: 0,
+                files: 0
+            },
+            process: {
+                heap: filesize(memory.heapUsed)
+            }
+        };
+
+        fs.readdir(storage, function(err, folders) {
+            if (err) {
+                log.error(err);
+                throw err;
+            }
+
+            folders = folders.filter(function(folder) {
+                return fs.lstatSync(path.join(storage, folder)).isDirectory();
+            });
+
+            var counter = 0;
+            data.count.project = folders.length;
+
+            var done = function() {
+                if (counter == folders.length) {
+                    req.data = data;
+                    next();
+                }
+            }
+
+            counter += folders.length;
+            // TODO: clean this up
+            folders.forEach(function(folder) {
+                fs.readdir(path.join(storage, folder), function(err, files) {
+                    if (err) {
+                        return;
+                    } else {
+                        counter += files.length;
+                        files.forEach(function(file) {
+                            fs.stat(path.join(storage, folder, file), function(err, stat) {
+                                stat.size = filesize(stat.size);
+                                stat.download = '/storage/' + file;
+                                stat.ctime = moment(stat.ctime).format('MMMM Do YYYY, h:mm:ss a');
+                                if(!data.projects[folder]) {
+                                    data.projects[folder] = [];
+                                }
+                                data.projects[folder].push({
+                                    name: file,
+                                    details: stat
+                                });
+                                data.count.files += 1;
+                                counter -= 1;
+                                done();
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    Routes.check = function(req, res) {
         if (!req.body && !req.body.project && !req.body.project.name) {
             return res.sendStatus(404);
         }
 
         var project = req.body.project;
         var extra = req.body.extra;
-        // TODO: Switch to something else or keep md5?
-        project.hash = crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
-        // storage directory for projects
-        project.storageDir = conf.get('storage');
-        // path where tar.gz will be saved
-        project.bundlePath = path.join(project.storageDir, project.name + '-' + project.hash + '.tar.gz');
-        project.productionBundlePath = path.join(project.storageDir, project.name + '-production-' + project.hash + '.tar.gz');
-        // temp storage directory where things install to
-        project.tempPath = path.join(project.storageDir, project.hash);
+
+        project = getProjectDetails(project);
 
         log.debug('Incoming Project', project, extra);
 
@@ -59,6 +136,7 @@ module.exports = function(log, conf) {
             if (bundleExists) {
                 response.available = true;
                 response.hash = project.hash;
+                response.project = project;
             }
 
             if (freightAuth.checkPassword(extra.password) && extra.create === 'true') {
@@ -67,6 +145,10 @@ module.exports = function(log, conf) {
                 getSearch().query(project.hash).end(function(err, ids) {
                     if (ids.length == 0) {
                         if (!bundleExists || extra.force === 'true') {
+                            try {
+                                fs.unlinkSync(project.bundlePath);
+                                fs.unlinkSync(project.productionBundlePath);
+                            } catch (ex) { /* doesn't matter if it fails */ }
                             response.creating = true;
                             response.hash = project.hash;
                             freighter.create(project, extra);
@@ -97,38 +179,32 @@ module.exports = function(log, conf) {
         });
     };
 
-    FreightRoutes.download = function(req, res) {
+    Routes.download = function(req, res) {
         log.debug('Download request', req.body);
-        if (req.body.hash) {
-            var hashFile = path.join(conf.get('storage'), req.body.name + '-' + req.body.hash + '.tar.gz');
-            if (req.body.options && req.body.options.production === 'true') {
-                hashFile = path.join(conf.get('storage'), req.body.name + '-production-' + req.body.hash + '.tar.gz');
-            }
-
-            fs.exists(hashFile, function(exists) {
-                if (exists) {
-                    log.debug('Download bundle:', hashFile);
-                    return res.sendFile(hashFile);
-                } else {
-                    log.debug('Bundle does not exist:', hashFile);
-                    return res.sendStatus(404);
-                }
-            });
-        } else {
-            log.debug('Hash not set.');
+        if (!req.body && !req.body.name) {
             return res.sendStatus(404);
         }
 
+        var project = getProjectDetails(req.body);
+        var file = project.bundlePath;
+        if (req.body.options && req.body.options.production === 'true') {
+            file = project.productionBundlePath;
+        }
+
+        fs.exists(file, function(exists) {
+            if (exists) {
+                log.debug('Download bundle:', file);
+                return res.sendFile(file);
+            } else {
+                log.debug('Bundle does not exist:', file);
+                return res.sendStatus(404);
+            }
+        });
     };
 
-    FreightRoutes.track = function(req, res) {
+    Routes.track = function(req, res) {
         if (req.body && req.body.repository && req.body.password && req.body.branch) {
             log.debug('Tracking request:', req.body);
-
-            if (!freightAuth.checkPassword(req.body.password)) {
-                log.debug('Password does not match');
-                return res.sendStatus(403);
-            }
 
             var extraOptions = {
                 trackDirectory: req.body.trackDirectory
@@ -145,7 +221,6 @@ module.exports = function(log, conf) {
                 }
             });
 
-
         } else {
             log.debug('Repository or password not set');
             return res.sendStatus(500);
@@ -153,5 +228,5 @@ module.exports = function(log, conf) {
 
     };
 
-    return FreightRoutes;
+    return Routes;
 };
