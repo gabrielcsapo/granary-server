@@ -4,6 +4,7 @@ var filesize = require('filesize');
 
 module.exports = function(app, log, conf) {
     var db = app.db;
+    var Project = require('./project')(app, log, conf);
     return {
         usage: function(req, res, next) {
             // TODO: refactor this using getProjectDetails
@@ -93,29 +94,7 @@ module.exports = function(app, log, conf) {
             if (req.params.file) {
                 log.debug('UI Bundle Download request', req.params.file);
                 var file = path.join(conf.get('storage'), req.params.folder, req.params.file);
-                fs.exists(file, function(exists) {
-                    if (exists) {
-                        // TODO: refactor stats into project.download
-                        // TODO: refactor file name into something less absolute
-                        var _file = path.join(req.params.folder, req.params.file);
-                        db.get(_file + '-download', function (err, value) {
-                            if (err) {
-                                db.put(_file + '-download', 1, function (err) {
-                                    console.log(err);
-                                    return res.sendFile(file);
-                                });
-                            } else {
-                                var num = 1;
-                                num += parseInt(value);
-                                db.put(_file + '-download', num, function (err) {
-                                    return res.sendFile(file);
-                                });
-                            }
-                        });
-                    } else {
-                        return res.sendStatus(404);
-                    }
-                });
+                Project.download(res, file, req.params.folder, req.params.file);
             } else {
                 res.sendStatus(404);
             }

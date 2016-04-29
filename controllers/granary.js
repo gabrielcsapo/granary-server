@@ -7,7 +7,7 @@ var moment = require('moment');
 
 module.exports = function(app, log, conf) {
     var db = app.db;
-    var Project = require('./project')(log, conf);
+    var Project = require('./project')(app, log, conf);
     var processor = require('../lib/job_processor')(log);
     log.debug('Redis Configuration', conf.get('redis'));
     var jobs = kue.createQueue({
