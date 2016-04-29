@@ -110,15 +110,19 @@ module.exports = function(app, log, conf) {
                                 // TODO: refactor into project.getProjectDetails
                                 db.get(_file+'-download', function(err, downloads) {
                                     db.get(_file+'-download-time', function(err, time) {
-                                        data.projects[folder].push({
-                                            name: file,
-                                            downloads: downloads ? downloads : 0,
-                                            avg_time: time ? time / downloads : 0,
-                                            details: stat
+                                        db.get(_file+'-bundle', function(err, bundle) {
+                                            console.log(bundle);
+                                            data.projects[folder].push({
+                                                name: file,
+                                                bundle: bundle,
+                                                downloads: downloads ? downloads : 0,
+                                                avg_time: time ? time / downloads : 0,
+                                                details: stat
+                                            });
+                                            data.count.files += 1;
+                                            counter -= 1;
+                                            done();
                                         });
-                                        data.count.files += 1;
-                                        counter -= 1;
-                                        done();
                                     });
                                 });
                             });
@@ -171,8 +175,17 @@ module.exports = function(app, log, conf) {
                             } catch (ex) { /* doesn't matter if it fails */ }
                             response.creating = true;
                             response.hash = project.hash;
-                            freighter.create(project, extra);
-                            return res.json(response);
+                            // TODO: refactor this crap
+                            var bundle = {
+                                npm: project.npm,
+                                bower: project.bower
+                            };
+                            db.put(project.bundlePath.substring(project.bundlePath.indexOf(project.name), project.bundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
+                                db.put(project.productionBundlePath.substring(project.productionBundlePath.indexOf(project.name), project.productionBundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
+                                    freighter.create(project, extra);
+                                    return res.json(response);
+                                });
+                            });
                         } else {
                             return res.json(response);
                         }
