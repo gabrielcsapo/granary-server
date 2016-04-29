@@ -6,6 +6,22 @@ var mkdirp = require('mkdirp');
 module.exports = function(app, log, conf) {
     var db = app.db;
     return {
+        getProjects: function() {
+            return new Promise(function (resolve, reject) {
+                var storage = conf.get('storage');
+                fs.readdir(storage, function(err, folders) {
+                    if (err) {
+                        log.error(err);
+                        throw err;
+                    }
+
+                    folders = folders.filter(function(folder) {
+                        return fs.lstatSync(path.join(storage, folder)).isDirectory();
+                    });
+                    resolve(folders);
+                });
+            });
+        },
         getDetails: function(project) {
             // TODO: Switch to something else or keep md5?
             project.hash = project.hash || crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
@@ -20,6 +36,7 @@ module.exports = function(app, log, conf) {
             project.tempPath = path.join(project.storageDir, project.hash);
             return project;
         },
+        // TODO: refactor to make it a promise
         getHashStats: function(hash, callback) {
             db.get(hash+'-download', function(err, downloads) {
                 db.get(hash+'-download-time', function(err, time) {

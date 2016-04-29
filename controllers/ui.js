@@ -7,7 +7,6 @@ module.exports = function(app, log, conf) {
     var Project = require('./project')(app, log, conf);
     return {
         usage: function(req, res, next) {
-            // TODO: refactor this using getProjectDetails
             var memory = process.memoryUsage();
             var storage = conf.get('storage');
 
@@ -23,20 +22,12 @@ module.exports = function(app, log, conf) {
                 }
             };
 
-            fs.readdir(storage, function(err, folders) {
-                if (err) {
-                    log.error(err);
-                    throw err;
-                }
+            Project.getProjects().then(function(folders) {
 
                 if(folders.length == 0) {
                     req.data = data;
                     next();
                 }
-
-                folders = folders.filter(function(folder) {
-                    return fs.lstatSync(path.join(storage, folder)).isDirectory();
-                });
 
                 var counter = 0;
                 data.count.projects = folders.length;
