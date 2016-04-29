@@ -81,7 +81,7 @@ module.exports = function(app, log, conf) {
             });
 
             var counter = 0;
-            data.count.project = folders.length;
+            data.count.projects = folders.length;
 
             var done = function() {
                 if (counter == folders.length) {
