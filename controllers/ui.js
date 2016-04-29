@@ -66,14 +66,16 @@ module.exports = function(app, log, conf) {
                                     }
                                     var _file = path.join(folder, file);
                                     Project.getHashStats(_file, function(stats) {
-                                        data.projects[folder].push({
-                                            name: file,
-                                            bundle: stats.bundle || "{}",
-                                            downloads: stats.downloads,
-                                            avg_time: stats.avg_time,
-                                            details: stat
-                                        });
-                                        data.count.files += 1;
+                                        if(stats.bundle) {
+                                            data.projects[folder].push({
+                                                name: file,
+                                                bundle: stats.bundle,
+                                                downloads: stats.downloads,
+                                                avg_time: stats.avg_time,
+                                                details: stat
+                                            });
+                                            data.count.files += 1;
+                                        }
                                         counter -= 1;
                                         done();
                                     });
