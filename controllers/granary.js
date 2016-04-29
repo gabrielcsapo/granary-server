@@ -58,7 +58,6 @@ module.exports = function(app, log, conf) {
             }
 
             if (Auth.checkPassword(extra.password) && extra.create === 'true') {
-                // TODO: delete stale jobs, try again to cache, fail if tries too many times.
                 // TODO: restart stale job if timeout > x.
                 getSearch().query(project.hash).end(function(err, ids) {
                     if (err) { log.error(err.toString()); }
@@ -91,13 +90,21 @@ module.exports = function(app, log, conf) {
                             if (err) {
                                 return res.json(err);
                             }
-                            response.creating = true;
-                            response.hash = project.hash;
-                            response.progress = job._progress;
-                            response.state = job._state;
-                            response.started_at = job.started_at;
-                            response.duration = job.duration;
-                            return res.json(response);
+                            if(job._state == 'failed') {
+                                job.remove(function() {
+                                    log.error('Failed Job removed :', job.data.project.name);
+                                    response.description = 'job failed; restarting;'
+                                    return res.json(response);
+                                })
+                            } else {
+                                response.creating = true;
+                                response.hash = project.hash;
+                                response.progress = job._progress;
+                                response.state = job._state;
+                                response.started_at = job.started_at;
+                                response.duration = job.duration;
+                                return res.json(response);
+                            }
                         });
                     } else {
                         return res.json(response);
