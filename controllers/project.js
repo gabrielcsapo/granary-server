@@ -19,12 +19,12 @@ module.exports = function(app, log, conf) {
             project.tempPath = path.join(project.storageDir, project.hash);
             return project;
         },
-        download: function(res, file, folder_location, file_location) {
+        download: function(res, file, name, bundle) {
             fs.exists(file, function(exists) {
                 if (exists) {
                     // TODO: refactor stats into project.download
-                    // TODO: refactor file name into something less absolute
-                    var _file = path.join(folder_location, file_location);
+                    // TODO: refactor file name into something less absolute (hash?)
+                    var _file = path.join(name, bundle);
                     db.get(_file + '-download', function (err, value) {
                         if (err) {
                             db.put(_file + '-download', 1, function (err) {

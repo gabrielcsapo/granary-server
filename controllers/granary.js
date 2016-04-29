@@ -121,16 +121,8 @@ module.exports = function(app, log, conf) {
             file = project.productionBundlePath;
         }
 
-        // TODO: refactor into project download
-        fs.exists(file, function(exists) {
-            if (exists) {
-                log.debug('Download bundle:', file);
-                return res.sendFile(file);
-            } else {
-                log.debug('Bundle does not exist:', file);
-                return res.sendStatus(404);
-            }
-        });
+        // TODO: refactor this, yeah shut up it is terrible
+        Project.download(res, file, project.name, file.substring(file.indexOf(project.name) + project.name.length + 1, file.length));
     };
 
     Routes.track = function(req, res) {
