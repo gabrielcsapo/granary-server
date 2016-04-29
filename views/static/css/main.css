@@ -13,3 +13,10 @@
   float: right;
   width: 150px;
 }
+
+table {
+    table-layout: fixed;
+}
+td {
+    overflow-wrap: break-word;
+}

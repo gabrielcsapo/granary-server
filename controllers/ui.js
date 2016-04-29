@@ -1,9 +1,9 @@
 var fs = require('fs');
 var path = require('path');
 var filesize = require('filesize');
+var moment = require('moment');
 
 module.exports = function(app, log, conf) {
-    var db = app.db;
     var Project = require('./project')(app, log, conf);
     return {
         usage: function(req, res, next) {
@@ -68,7 +68,7 @@ module.exports = function(app, log, conf) {
                                     Project.getHashStats(_file, function(stats) {
                                         data.projects[folder].push({
                                             name: file,
-                                            bundle: stats.bundle,
+                                            bundle: stats.bundle || "{}",
                                             downloads: stats.downloads,
                                             avg_time: stats.avg_time,
                                             details: stat

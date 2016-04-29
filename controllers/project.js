@@ -28,7 +28,7 @@ module.exports = function(app, log, conf) {
                             downloads: downloads ? downloads : 0,
                             time: time,
                             bundle: bundle,
-                            avg_time: time ? time / downloads : 0,
+                            avg_time: time ? time / downloads : 0
                         });
                     });
                 });
@@ -64,13 +64,14 @@ module.exports = function(app, log, conf) {
                     db.get(_file + '-download', function (err, value) {
                         if (err) {
                             db.put(_file + '-download', 1, function (err) {
-                                console.log(err);
+                                if (err) { log.error(err.toString()); }
                                 return res.sendFile(file);
                             });
                         } else {
                             var num = 1;
                             num += parseInt(value);
                             db.put(_file + '-download', num, function (err) {
+                                if (err) { log.error(err.toString()); }
                                 return res.sendFile(file);
                             });
                         }

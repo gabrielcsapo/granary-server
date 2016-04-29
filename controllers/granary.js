@@ -1,15 +1,14 @@
 var fs = require('fs');
-var path = require('path');
 var kue = require('kue');
 var Job = require('kue/lib/queue/job');
 var reds = require('reds');
-var moment = require('moment');
 
 module.exports = function(app, log, conf) {
     var db = app.db;
     var Project = require('./project')(app, log, conf);
     var processor = require('../lib/job_processor')(log);
     log.debug('Redis Configuration', conf.get('redis'));
+    // TODO: refactor this out into setup file
     var jobs = kue.createQueue({
         redis: conf.get('redis'),
         disableSearch: false
@@ -25,8 +24,8 @@ module.exports = function(app, log, conf) {
 
     processor.setup(jobs);
 
-    var tracker = require('../lib/tracker')(log, conf, jobs);
-    var freightAuth = require('../lib/auth')(log, conf);
+    var Tracker = require('../lib/tracker')(log, conf, jobs);
+    var Auth = require('../lib/auth')(log, conf);
     var Routes = {};
 
     // TODO: refactor this
@@ -40,9 +39,7 @@ module.exports = function(app, log, conf) {
         var project = req.body.project;
         var extra = req.body.extra;
 
-        // TODO: always send project back in response payload
         project = Project.getDetails(project);
-        response.project = project;
 
         log.debug('Incoming Project', project, extra);
 
@@ -51,7 +48,8 @@ module.exports = function(app, log, conf) {
             var response = {
                 creating: false,
                 available: false,
-                authenticated: freightAuth.checkPassword(extra.password)
+                project: project,
+                authenticated: Auth.checkPassword(extra.password)
             };
 
             if (bundleExists) {
@@ -59,10 +57,11 @@ module.exports = function(app, log, conf) {
                 response.hash = project.hash;
             }
 
-            if (freightAuth.checkPassword(extra.password) && extra.create === 'true') {
+            if (Auth.checkPassword(extra.password) && extra.create === 'true') {
                 // TODO: delete stale jobs, try again to cache, fail if tries too many times.
                 // TODO: restart stale job if timeout > x.
                 getSearch().query(project.hash).end(function(err, ids) {
+                    if (err) { log.error(err.toString()); }
                     if (ids.length == 0) {
                         if (!bundleExists || extra.force === 'true') {
                             try {
@@ -77,7 +76,9 @@ module.exports = function(app, log, conf) {
                                 bower: project.bower
                             };
                             db.put(project.bundlePath.substring(project.bundlePath.indexOf(project.name), project.bundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
+                                if (err) { log.error(err.toString()); }
                                 db.put(project.productionBundlePath.substring(project.productionBundlePath.indexOf(project.name), project.productionBundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
+                                    if (err) { log.error(err.toString()); }
                                     Project.create(project, extra, jobs);
                                     return res.json(response);
                                 });
@@ -132,7 +133,7 @@ module.exports = function(app, log, conf) {
                 trackDirectory: req.body.trackDirectory
             };
 
-            tracker.create(req.body.repository, req.body.branch, extraOptions, function(err) {
+            Tracker.create(req.body.repository, req.body.branch, extraOptions, function(err) {
                 if (err) {
                     // fetch $REPO, run granary on it
                     // keep fetching the $BRANCH, run granary on it
