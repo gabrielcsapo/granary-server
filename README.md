@@ -38,9 +38,23 @@ A password setting of `""` (empty string) indicates that the Freight Server will
 
 Server will start on port `8872`. You should be able to navigate to the dashboard:
 
-![](doc/main-page.png)
+![](doc/remote-1920x1080-doc.png)
 
 #### Other Configuration
 
 See [config/config.js](config/config.js#L12) for available
 configuration options and environment variables. The Freight Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.
+
+# Contributions
+
+> all contributions are welcome and wanted
+
+## Ways to contribute
+
+- create an issue
+    - if the issue is UI related, please provide a screenshot
+    - if the issue is code related, please provide code sample that causes this issue (a curl command, etc)
+- close an issue or code cleanup
+    - branch names should be named `fix-#{issue-number}` if they are fixing an issue
+    - branches that are aimed at code cleanup should be labeled `cleanup-{area-of-cleanup}`
+    - please run `npm test` and `grunt screenshot` before issuing a PR 
