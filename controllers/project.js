@@ -2,6 +2,7 @@ var crypto = require('crypto');
 var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var Promise = require('bluebird');
 
 module.exports = function(app, log, conf) {
     var db = app.db;
@@ -12,13 +13,13 @@ module.exports = function(app, log, conf) {
                 fs.readdir(storage, function(err, folders) {
                     if (err) {
                         log.error(err);
-                        throw err;
+                        reject(err, null);
                     }
 
                     folders = folders.filter(function(folder) {
                         return fs.lstatSync(path.join(storage, folder)).isDirectory();
                     });
-                    resolve(folders);
+                    resolve(null, folders);
                 });
             });
         },
