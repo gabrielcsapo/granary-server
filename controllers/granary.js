@@ -135,8 +135,8 @@ module.exports = function(app, log, conf) {
 
             tracker.create(req.body.repository, req.body.branch, extraOptions, function(err) {
                 if (err) {
-                    // fetch $REPO, run freight on it
-                    // keep fetching the master branch, run freight on it
+                    // fetch $REPO, run granary on it
+                    // keep fetching the $BRANCH, run granary on it
                     log.debug('Cannot track repository: ', err);
                     return res.sendStatus(500);
                 } else {

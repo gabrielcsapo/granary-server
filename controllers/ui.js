@@ -65,23 +65,17 @@ module.exports = function(app, log, conf) {
                                         data.projects[folder] = [];
                                     }
                                     var _file = path.join(folder, file);
-                                    // TODO: refactor into project.getProjectDetails
-                                    db.get(_file+'-download', function(err, downloads) {
-                                        db.get(_file+'-download-time', function(err, time) {
-                                            db.get(_file+'-bundle', function(err, bundle) {
-                                                console.log(bundle);
-                                                data.projects[folder].push({
-                                                    name: file,
-                                                    bundle: bundle,
-                                                    downloads: downloads ? downloads : 0,
-                                                    avg_time: time ? time / downloads : 0,
-                                                    details: stat
-                                                });
-                                                data.count.files += 1;
-                                                counter -= 1;
-                                                done();
-                                            });
+                                    Project.getHashStats(_file, function(stats) {
+                                        data.projects[folder].push({
+                                            name: file,
+                                            bundle: stats.bundle,
+                                            downloads: stats.downloads,
+                                            avg_time: stats.avg_time,
+                                            details: stat
                                         });
+                                        data.count.files += 1;
+                                        counter -= 1;
+                                        done();
                                     });
                                 });
                             });

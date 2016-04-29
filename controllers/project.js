@@ -19,10 +19,23 @@ module.exports = function(app, log, conf) {
             project.tempPath = path.join(project.storageDir, project.hash);
             return project;
         },
+        getHashStats: function(hash, callback) {
+            db.get(hash+'-download', function(err, downloads) {
+                db.get(hash+'-download-time', function(err, time) {
+                    db.get(hash+'-bundle', function(err, bundle) {
+                        callback({
+                            downloads: downloads ? downloads : 0,
+                            time: time,
+                            bundle: bundle,
+                            avg_time: time ? time / downloads : 0,
+                        });
+                    });
+                });
+            });
+        },
         download: function(res, file, name, bundle) {
             fs.exists(file, function(exists) {
                 if (exists) {
-                    // TODO: refactor stats into project.download
                     // TODO: refactor file name into something less absolute (hash?)
                     var _file = path.join(name, bundle);
                     db.get(_file + '-download', function (err, value) {
