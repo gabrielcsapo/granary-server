@@ -13,13 +13,12 @@ module.exports = function(app, log, conf) {
                 fs.readdir(storage, function(err, folders) {
                     if (err) {
                         log.error(err);
-                        reject(err, null);
+                        reject(err);
                     }
-
                     folders = folders.filter(function(folder) {
                         return fs.lstatSync(path.join(storage, folder)).isDirectory();
                     });
-                    resolve(null, folders);
+                    resolve(folders);
                 });
             });
         },

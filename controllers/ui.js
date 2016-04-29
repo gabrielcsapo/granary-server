@@ -20,9 +20,7 @@ module.exports = function(app, log, conf) {
                 }
             };
 
-            Project.getProjects().then(function(err, folders) {
-                if(err) { log.error(err.toString()); }
-
+            Project.getProjects().then(function(folders) {
                 if(folders.length == 0) {
                     req.data = data;
                     next();
@@ -75,7 +73,11 @@ module.exports = function(app, log, conf) {
                         });
                     });
                 }
-            });
+            }).catch(function(err) {
+                if(err) { log.error(err.toString()); }
+                req.data = data;
+                next();
+            })
         },
         download: function(req, res) {
             if (req.params.file) {

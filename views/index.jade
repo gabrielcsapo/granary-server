@@ -1,43 +1,118 @@
 extends layout
 
 block content
-    div.row
-        div.container
-            div.jumbotron.intro
-                h1 Granary Server
-                img.logo(src='/static/img/logo.svg', alt='Freight Server')
-            hr
-            p
-                a.btn.btn-primary.btn-info(href='/granaries/active') View Granary Queue
-                a.btn.btn-primary.btn(href='http://github.com/gabrielcsapo/granary-server') About Granary
+    div.container
+        br
+        if(!presentation)
             blockquote
                 p
                     | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
                 small
                     | Granary Server
-            h1 Bundles
-            each project, name in projects
-                h3 #{name}
-                table.table.table-striped.table-hover.table-responsive
-                    thead
-                        tr
-                            th Bundle Name
-                            th Created
-                            th Size
-                            th Downloads
-                            th Average Time
-                            th Bundle
-                            th File
-                    tbody
-                        for file in project
-                            tr
-                                td
-                                    strong=file.name
-                                td=file.details.ctime
-                                td=file.details.size
-                                td=file.downloads
-                                td=file.avg_time
-                                td=JSON.stringify(JSON.parse(file.bundle), null, 4)
-                                td
-                                    a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{name}/#{file.name}') Delete
-                                    a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{name}/#{file.name}') Download
+        div.jumbotron.intro.text-center
+            h1 Granary Server
+            if(src)
+                img.logo(alt='Granary Server', src='data:img/png;base64,#{src}')
+            else
+                img.logo(src='/static/img/logo.svg', alt='Granary Server')
+            br
+            a(href="https://github.com/gabrielcsapo/granary" target="_blank").btn.btn-primary
+                | Client Source
+            | &nbsp;
+            a(href="https://github.com/gabrielcsapo/granary-server" target="_blank").btn.btn-info
+                | Server Source
+        hr
+        h3.text-center Install Granary
+        br
+        pre
+            code
+                | npm install granary -g
+        h3.text-center What Does Granary Do?
+        hr
+        div.row
+            div.col-md-6
+                | Granary can create production and development bundles of your projects
+            div.col-md-6
+                pre
+                    code
+                        | granary create -u=http://localhost:8872
+        hr
+        div.row
+            div.col-md-6
+                | Granary installs the development bundle by default
+            div.col-md-6
+                pre
+                    code
+                        | granary -u=http://localhost:8872 
+        hr
+        div.row
+            div.col-md-6
+                | Granary also allows you to specify production bundle 
+            div.col-md-6
+                pre
+                    code
+                        | granary -u=http://localhost:8872 --production
+        hr
+        h3.text-center Install your own Server!
+        hr
+        div.row
+            div.col-md-6
+                | Clone the server
+            div.col-md-6
+                pre
+                    code
+                        | git clone https://github.com/gabrielcsapo/granary-server.git
+        hr
+        div.row
+            div.col-md-6
+                | Install a redis server
+            div.col-md-6
+                small
+                    i brew
+                pre
+                    code
+                        | brew install redis
+                small
+                    i apt 
+                pre
+                    code
+                        | sudo apt-get -y install redis-server;
+        hr
+        div.row
+            div.col-md-6
+                | Install node dependencies 
+            div.col-md-6
+                pre
+                    code
+                        | npm install
+        hr
+        div.row
+            div.col-md-6
+                | Start the server!
+            div.col-md-6
+                pre
+                    code
+                        | npm start;
+                br
+                small Start the server with a custom config
+                br
+                br
+                pre
+                    code
+                        | GRANARY_CONFIG=/ npm start;
+        hr
+        h3.text-center Install your own Server!
+        h6.text-center Sometimes we need some security
+        hr
+        div.row
+            div.col-md-6
+                | Password
+            div.col-md-6
+                span!=marked('Freight Server automatically configures a password for you. You can change it by modifying the [dev.json](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js) file.')
+                span!=marked('A password setting of `""` (empty string) indicates that the Freight Server will not require a password for any actions.')
+                span!=marked('Server will start on port `8872`. You should be able to navigate to the dashboard:')
+        div.row 
+            div.col-md-6   
+                | Configuration
+            div.col-md-6
+                span!=marked("See [config/config.js](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js#L11) for available configuration options and environment variables. The Freight Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.")
