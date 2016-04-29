@@ -7,8 +7,8 @@ var reds = require('reds');
 var filesize = require('filesize');
 var moment = require('moment');
 
-module.exports = function(log, conf) {
-
+module.exports = function(app, log, conf) {
+    var db = app.db;
     var processor = require('../lib/job_processor')(log);
     log.debug('Redis Configuration', conf.get('redis'));
     var jobs = kue.createQueue({
@@ -24,6 +24,7 @@ module.exports = function(log, conf) {
         return search = reds.createSearch(jobs.client.getKey('search'));
     }
 
+    // TODO: refactor into project.js
     function getProjectDetails(project) {
         // TODO: Switch to something else or keep md5?
         project.hash = project.hash || crypto.createHash('md5').update(JSON.stringify(project)).digest('hex');
@@ -46,6 +47,8 @@ module.exports = function(log, conf) {
     var freightAuth = require('../lib/auth')(log, conf);
     var Routes = {};
 
+    // TODO: refactor into ui.js
+    // TODO: refactor this using getProjectDetails
     Routes.usage = function(req, res, next) {
         var memory = process.memoryUsage();
         var storage = conf.get('storage');
@@ -103,13 +106,21 @@ module.exports = function(log, conf) {
                                 if(!data.projects[folder]) {
                                     data.projects[folder] = [];
                                 }
-                                data.projects[folder].push({
-                                    name: file,
-                                    details: stat
+                                var _file = path.join(folder, file);
+                                // TODO: refactor into project.getProjectDetails
+                                db.get(_file+'-download', function(err, downloads) {
+                                    db.get(_file+'-download-time', function(err, time) {
+                                        data.projects[folder].push({
+                                            name: file,
+                                            downloads: downloads ? downloads : 0,
+                                            avg_time: time ? time / downloads : 0,
+                                            details: stat
+                                        });
+                                        data.count.files += 1;
+                                        counter -= 1;
+                                        done();
+                                    });
                                 });
-                                data.count.files += 1;
-                                counter -= 1;
-                                done();
                             });
                         });
                     }
@@ -118,6 +129,9 @@ module.exports = function(log, conf) {
         });
     }
 
+    // TODO: refactor this
+    // TODO: send back response.state for front-end to know what state the backend is in
+    // TODO: remove the tree of if statements
     Routes.check = function(req, res) {
         if (!req.body && !req.body.project && !req.body.project.name) {
             return res.sendStatus(404);
@@ -126,6 +140,7 @@ module.exports = function(log, conf) {
         var project = req.body.project;
         var extra = req.body.extra;
 
+        // TODO: always send project back in response payload
         project = getProjectDetails(project);
 
         log.debug('Incoming Project', project, extra);

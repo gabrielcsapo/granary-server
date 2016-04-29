@@ -5,3 +5,4 @@ storage
 npm-debug.log
 temp/**
 dump.rdb
+db

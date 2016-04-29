@@ -23,6 +23,8 @@ block content
                         th Bundle Name
                         th Created
                         th Size
+                        th Downloads
+                        th Average Time
                         th File
                 tbody
                     for file in project
@@ -31,6 +33,8 @@ block content
                                 strong=file.name
                             td=file.details.ctime
                             td=file.details.size
+                            td=file.downloads
+                            td=file.avg_time
                             td
-                                a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{file.name}') Delete
-                                a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{file.name}') Download
+                                a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{name}/#{file.name}') Delete
+                                a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{name}/#{file.name}') Download
