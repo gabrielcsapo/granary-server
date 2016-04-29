@@ -3,7 +3,7 @@ module.exports = function(app, log, conf) {
     var Granary = require('../controllers/granary')(app, log, conf);
     var UI = require('../controllers/ui')(app, log, conf);
 
-    app.get('/', Granary.usage, function(req, res) {
+    app.get('/', UI.usage, function(req, res) {
         res.render('index', req.data);
     });
 
