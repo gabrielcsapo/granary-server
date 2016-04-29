@@ -1,7 +1,7 @@
 module.exports = function(app, log, conf) {
     var Auth = require('../lib/auth')(log, conf);
-    var Granary = require('./granary')(app, log, conf);
-    var UI = require('./ui')(app, log, conf);
+    var Granary = require('../controllers/granary')(app, log, conf);
+    var UI = require('../controllers/ui')(app, log, conf);
 
     app.get('/', Granary.usage, function(req, res) {
         res.render('index', req.data);
