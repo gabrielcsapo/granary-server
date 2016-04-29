@@ -25,7 +25,6 @@ module.exports = function(app, log, conf) {
 
     processor.setup(jobs);
 
-    var freighter = require('../lib/freighter')(log, conf, jobs);
     var tracker = require('../lib/tracker')(log, conf, jobs);
     var freightAuth = require('../lib/auth')(log, conf);
     var Routes = {};
@@ -79,7 +78,7 @@ module.exports = function(app, log, conf) {
                             };
                             db.put(project.bundlePath.substring(project.bundlePath.indexOf(project.name), project.bundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
                                 db.put(project.productionBundlePath.substring(project.productionBundlePath.indexOf(project.name), project.productionBundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
-                                    freighter.create(project, extra);
+                                    Project.create(project, extra, jobs);
                                     return res.json(response);
                                 });
                             });
