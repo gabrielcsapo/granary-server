@@ -1,5 +1,5 @@
 {
-  "name": "sample-bower-error-project",
+  "name": "sample-project",
   "version": "0.1.0",
   "dependencies": {
     "normalize.css": "xz"

@@ -12,7 +12,7 @@ module.exports = function (expectedConfigFile) {
     console.log('***** NOTICE ****** \n');
     console.log('You are missing "' + expectedConfigFile + '"');
     console.log('Creating a configuration automatically for you....');
-    console.log('Your Freight Server password is: \n');
+    console.log('Your Granary Server password is: \n');
     console.log(hash);
     console.log('\n Use the password above to generate bundles.');
     var devSampleFile = JSON.parse(fs.readFileSync(__dirname + '/dev.json-dist'));
