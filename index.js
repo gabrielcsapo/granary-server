@@ -3,6 +3,7 @@ GLOBAL._name = 'granary';
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var conf = require('./config/config')();
 var log = require('./lib/log')(conf);
 var kue = require('kue');
@@ -22,6 +23,8 @@ app.use(bodyParser.urlencoded({
     limit: conf.get('limit') + 'kb',
     extended: true
 }));
+
+mkdirp(conf.get('storage'), function (err) {});
 
 require('./routes/index')(app, log, conf);
 

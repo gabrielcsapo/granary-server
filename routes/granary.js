@@ -68,6 +68,11 @@ module.exports = function(log, conf) {
                 throw err;
             }
 
+            if(folders.length == 0) {
+                req.data = data;
+                next();
+            }
+
             folders = folders.filter(function(folder) {
                 return fs.lstatSync(path.join(storage, folder)).isDirectory();
             });
