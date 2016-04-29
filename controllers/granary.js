@@ -42,6 +42,7 @@ module.exports = function(app, log, conf) {
 
         // TODO: always send project back in response payload
         project = Project.getDetails(project);
+        response.project = project;
 
         log.debug('Incoming Project', project, extra);
 
@@ -56,7 +57,6 @@ module.exports = function(app, log, conf) {
             if (bundleExists) {
                 response.available = true;
                 response.hash = project.hash;
-                response.project = project;
             }
 
             if (freightAuth.checkPassword(extra.password) && extra.create === 'true') {
