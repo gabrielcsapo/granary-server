@@ -65,17 +65,19 @@ module.exports = function () {
       port: {
         doc: 'Redis Port',
         format: 'port',
-        default: 6379
+        default: 6379,
+        env: 'REDIS_PORT'
       },
       host: {
         doc: 'Redis IP address to bind.',
-        format: 'ipaddress',
-        default: '127.0.0.1'
+        default: '127.0.0.1',
+        env: 'REDIS_IP'
       },
       auth: {
         doc: 'Redis Password.',
         format: String,
-        default: ''
+        default: '',
+        env: 'REDIS_PASSWORD'
       },
       options: {
         doc: 'Redis Options.',
