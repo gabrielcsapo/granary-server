@@ -6,8 +6,7 @@ var executable = process.GRANARY;
 describe('cli', function () {
 
   it('should error with no url set', function (done) {
-    exec(executable,
-      function (error, stdout, stderr) {
+    exec(executable, function (error, stdout, stderr) {
         assert.ok(stderr);
         assert.notOk(stdout);
         done();
@@ -15,8 +14,7 @@ describe('cli', function () {
   });
 
   it('should not error with url set', function (done) {
-    exec(executable + ' -u=http://localhost:8872',
-      function (error, stdout, stderr) {
+    exec(executable + ' -u=http://localhost:8872', function (error, stdout, stderr) {
         assert.equal(stderr, '');
         assert.ok(stdout);
         done();
