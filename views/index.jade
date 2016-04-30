@@ -22,6 +22,43 @@ block content
             a(href="https://github.com/gabrielcsapo/granary-server" target="_blank").btn.btn-info
                 | Server Source
         hr
+        h3.text-center What is Granary?
+        br
+        div.text-center 
+            i Granary is an NPM / Bower bundling Server
+        br
+        small
+            i problem
+        div 
+            | It does not replace NPM or bower when it comes to depency maintance. 
+            | Granary is a project bundler. When developing Node.js applications NPM is widely used for package depencies.
+            | Depending on the speed of your internet NPM might take quite a while to multiplex your downloads and compile them to finally begin development.
+        br
+        small 
+            i solution
+        div
+            span!=marked("Granary helps by being deployed on cloud provider and access to high speed internet it will bundle your npm and bower dependencies and send them to you as one gzipped folder which it will unpack into the corresponding `node_modules` and `bower_components` directories ready to use.")
+        hr
+        h3.text-center What are the speed benefits?
+        br
+        div!=marked("In order to give a speed comparison I will compare basic `time NODE_ENV=production npm install` and then an install from `Granary Server`")
+        table.table.table-responsive
+            thead
+                tr 
+                    th NPM
+                    th Granary Server
+            tbody
+                tr
+                    th 
+                        span!=marked("`time NODE_ENV=production npm install`")
+                        span!=marked("`real	1m7.121s`")
+                    th
+                        span!=marked("`granary -u=https://granary-server.herokuapp.com --production`")
+                        span!=marked("`Downloading bundle: |||||||||||||||||||| 100% 0.0s 7.95 MB`")
+                        span!=marked("`Extracting bundle...`")
+                        span!=marked("`Running NPM rebuild...`")
+                        span!=marked("`Granary is done in 18.203 seconds.`")
+        hr
         h3.text-center Install Granary
         br
         pre
