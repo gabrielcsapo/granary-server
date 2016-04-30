@@ -8,6 +8,7 @@
     "start": "redis-server & node ./bin/granary-server | bunyan -o short"
   },
   "main": "./bin/granary-server",
+  "license": "ISC",
   "dependencies": {
     "archiver": "^1.0.0",
     "async": "^1.5.2",
