@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                         delay: 2000
                     }],
                     viewport: ['1920x1080']
-                },
+                }
             }
         },
         pug: {
