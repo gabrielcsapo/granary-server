@@ -13,7 +13,7 @@ describe('granary-server', function() {
         cli.stdout.on('data', function(data) {
             var message = data.toString('utf8');
             console.log(message); // eslint-disable-line no-console
-            if(message.indexOf('INFO freight-server: Granary Server is now running port 8872') > -1) {
+            if(message.indexOf('INFO granary-server: Granary Server is now running port 8872') > -1) {
                 done();
             }
         });
