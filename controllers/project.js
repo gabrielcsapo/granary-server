@@ -18,6 +18,7 @@ module.exports = function(app, log, conf) {
                     folders = folders.filter(function(folder) {
                         return fs.lstatSync(path.join(storage, folder)).isDirectory();
                     });
+                    folders = folders.sort();
                     resolve(folders);
                 });
             });
