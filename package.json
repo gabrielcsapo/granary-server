@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "test": "npm run clean;./node_modules/eslint/bin/eslint.js .;./node_modules/mocha/bin/mocha;",
-    "test-local": "npm run clean;./node_modules/mocha/bin/mocha;",
     "clean": "redis-cli flushall;rm -rf storage/**; rm -rf db;",
     "start": "redis-server & node ./bin/granary-server | bunyan -o short"
   },

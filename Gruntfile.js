@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-pug');
     grunt.initConfig({
         screenshot: {
-            default_options: {
+            granary: {
                 options: {
                     path: './doc',
                     files: [{
