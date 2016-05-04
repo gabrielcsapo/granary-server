@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var spawn = require('child_process').spawn;
 
 var cli = '';
@@ -14,6 +15,8 @@ describe('granary-server', function() {
             var message = data.toString('utf8');
             console.log(message); // eslint-disable-line no-console
             if(message.indexOf('INFO granary-server: Granary Server is now running port 8872') > -1) {
+                var config = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config', 'dev.json')));
+                process.CORRECT_PASSWORD = config.password;
                 done();
             }
         });
