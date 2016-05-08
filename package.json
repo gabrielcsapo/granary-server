@@ -4,7 +4,7 @@
   "scripts": {
     "test": "npm run clean;./node_modules/eslint/bin/eslint.js .;./node_modules/mocha/bin/mocha;",
     "clean": "redis-cli flushall;rm -rf storage/**; rm -rf db;",
-    "start": "redis-server & node ./bin/granary-server | bunyan -o short"
+    "start": "redis-server & forever start ./bin/granary-server | bunyan -o short"
   },
   "main": "./bin/granary-server",
   "license": "ISC",
