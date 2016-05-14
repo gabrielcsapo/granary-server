@@ -23,7 +23,7 @@
     "express": "^4.13.4",
     "filesize": "^3.3.0",
     "granary": "*",
-    "jade": "^1.11.0",
+    "grunt-contrib-pug": "^1.0.0",
     "jquery": "^2.2.3",
     "kue": "^0.10.5",
     "marked": "^0.3.5",
@@ -31,6 +31,7 @@
     "moment": "^2.13.0",
     "mongoose": "^4.4.17",
     "npm": "3.8.8",
+    "pug": "^2.0.0-alpha7",
     "reds": "^0.2.5",
     "response-time": "^2.3.1",
     "rimraf": "^2.5.2"
@@ -39,7 +40,7 @@
     "chai": "^3.5.0",
     "eslint": "^2.9.0",
     "grunt": "^1.0.1",
-    "grunt-contrib-pug": "0.0.0",
+    "grunt-contrib-pug": "1.0.0",
     "grunt-screenshot": "^0.1.0",
     "mocha": "^2.4.5"
   },

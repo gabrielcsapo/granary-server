@@ -31,7 +31,7 @@ block content
                                 td=file.avg_time
                                 td=JSON.stringify(JSON.parse(file.bundle), null, 4)
                                 td
-                                    a.btn.btn-sm.btn-info(type='button', href='/ui/#{name}/#{file.name}') Info
-                                    a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/#{name}/#{file.name}') Delete
-                                    a.btn.btn-sm.btn-success(type='button', href='/ui/download/#{name}/#{file.name}') Download
+                                    a.btn.btn-sm.btn-info(type='button', href='/ui/' + name + '/' + file.name) Info
+                                    a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/' + name + '/' + file.name) Delete
+                                    a.btn.btn-sm.btn-success(type='button', href='/ui/download/' + name + '/' + file.name) Download
         div.col-md-1

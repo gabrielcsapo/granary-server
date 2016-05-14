@@ -11,7 +11,7 @@ app.conf = conf;
 app.log = log;
 
 app.set('views', path.resolve(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.use('/static', express.static(path.resolve(__dirname, 'views/static')));
 
 mkdirp(conf.get('storage'), function (err) {
