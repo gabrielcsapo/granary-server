@@ -109,11 +109,11 @@
  });
 
  mkdirp(conf.get('storage'), function (err) {
-     if (err) { log.error(err.toString()); }
+     if (err) { logger.error(err.toString()); }
  });
 
  mkdirp(conf.get('temp'), function (err) {
-     if (err) { log.error(err.toString()); }
+     if (err) { logger.error(err.toString()); }
  });
 
  logger.level(conf.get('log').level);
