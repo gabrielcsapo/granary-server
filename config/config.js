@@ -4,6 +4,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var bunyan = require('bunyan');
 
+// TODO: make sure logic only runs one time, then just return a singleton
 module.exports = function () {
 
   var logger = bunyan.createLogger({
