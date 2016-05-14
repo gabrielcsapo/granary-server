@@ -1,9 +1,7 @@
-/**
- * Default Configuration.
- * See https://github.com/mozilla/node-convict/blob/master/README.md for details.
- */
  // TODO: refactor this out
 var convict = require('convict');
+var fs = require('fs');
+var crypto = require('crypto');
 
 module.exports = function () {
 
@@ -11,8 +9,23 @@ module.exports = function () {
   var env = process.env.NODE_ENV || 'dev';
   var configFile = process.env.GRANARY_CONFIG || __dirname + '/' + env + '.json';
 
-  // TODO: refactor this code into config.js no reason to have it in another folder
-  require('./autoconfig')(configFile);
+  if (!fs.existsSync(configFile)) {
+      var buf = crypto.randomBytes(256);
+      var hash = crypto.createHash('sha1').update(buf).digest('hex');
+
+      // TODO: refactor
+      // TODO: use logger and not console
+      console.log('***** NOTICE ****** \n');
+      console.log('You are missing "' + configFile + '"');
+      console.log('Creating a configuration automatically for you....');
+      console.log('Your Granary Server password is: \n');
+      console.log(hash);
+      console.log('\n Use the password above to generate bundles.');
+      var defaultFile = {
+          "password": hash
+      };
+      fs.writeFileSync(configFile, JSON.stringify(defaultFile), null, 4);
+  }
 
   var conf = convict({
     env: {
@@ -96,10 +109,7 @@ module.exports = function () {
     }
   });
 
-  // load environment dependent configuration
-  // TODO: development only for now, change it later.
   conf.loadFile(configFile);
-  // perform configuration validation
   conf.validate();
 
   return conf;
