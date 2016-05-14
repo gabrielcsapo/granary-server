@@ -10,7 +10,7 @@ module.exports = function(app, log, conf) {
     var Project = require('../lib/project')(log, conf);
     var Stats = require('../lib/stats')(log);
     var Granary = require('../lib/granary')(log, conf);
-    var UI = require('../lib/ui')(log, conf);
+    var UI = require('../lib/ui')();
 
     app.use(bodyParser.json({
         limit: conf.get('limit') + 'kb'
