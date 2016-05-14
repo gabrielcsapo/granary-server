@@ -21,6 +21,11 @@ module.exports = function(grunt) {
                         delay: 500
                     },{
                         type: 'remote',
+                        src: 'http://localhost:8872/queue',
+                        dest: 'queue.png',
+                        delay: 500
+                    },{
+                        type: 'remote',
                         src: 'http://localhost:8872/ui/granary-sample/development-3bf358bbb935b94ab33536f2ae805e99.tar.gz',
                         dest: 'bundle.png',
                         delay: 500

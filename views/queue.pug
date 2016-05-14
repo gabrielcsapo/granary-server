@@ -1,0 +1,13 @@
+extends layout
+
+block head
+    meta(http-equiv='refresh', content='20')
+    style.
+        html, body {
+            height:100%;
+        }
+
+block content
+    div.row(style="height:85%;")
+        div.col-md-12(style="height:100%;")
+            iframe(src="/kue" height="100%" width="100%" frameborder=0)
