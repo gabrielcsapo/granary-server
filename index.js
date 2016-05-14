@@ -13,6 +13,8 @@ app.log = log;
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use('/static', express.static(path.resolve(__dirname, 'views/static')));
+app.use('/static/highcharts', express.static(path.resolve(__dirname, 'node_modules', 'highcharts')));
+app.use('/static/jquery', express.static(path.resolve(__dirname, 'node_modules', 'jquery')));
 
 mkdirp(conf.get('storage'), function (err) {
     if (err) { log.error(err.toString()); }
