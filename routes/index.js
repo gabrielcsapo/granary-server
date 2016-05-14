@@ -61,6 +61,10 @@ module.exports = function(app, log, conf) {
         res.render('bundles', req.data);
     });
 
+    app.get('/queue', function(req, res) {
+        res.render('queue');
+    });
+
     app.get('/ui/:folder/:file', function(req, res) {
         var folder = req.params.folder;
         var file = req.params.file;
@@ -82,7 +86,7 @@ module.exports = function(app, log, conf) {
     app.get('/ui/download/:folder/:file', Auth.middleware, UI.download);
     app.get('/ui/delete/:folder/:file', Auth.logout, Auth.middleware, UI.delete);
 
-    app.use('/granaries', kue.app);
+    app.use('/kue', kue.app);
 
     app.use(function (req, res, next) {
       var err = new Error('Not Found');
