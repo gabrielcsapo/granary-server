@@ -3,9 +3,8 @@ var kue = require('kue');
 var Job = require('kue/lib/queue/job');
 var reds = require('reds');
 
-module.exports = function(app, log, conf) {
-    var db = app.db;
-    var Project = require('./project')(app, log, conf);
+module.exports = function(log, conf) {
+    var Project = require('./project')(log, conf);
     var processor = require('../lib/job_processor')(log);
     log.debug('Redis Configuration', conf.get('redis'));
     // TODO: refactor this out into setup file
@@ -69,19 +68,8 @@ module.exports = function(app, log, conf) {
                             } catch (ex) { /* doesn't matter if it fails */ }
                             response.creating = true;
                             response.hash = project.hash;
-                            // TODO: refactor this crap into Project.create?
-                            var bundle = {
-                                npm: project.npm,
-                                bower: project.bower
-                            };
-                            db.put(project.bundlePath.substring(project.bundlePath.indexOf(project.name), project.bundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
-                                if (err) { log.error(err.toString()); }
-                                db.put(project.productionBundlePath.substring(project.productionBundlePath.indexOf(project.name), project.productionBundlePath.length) + '-bundle', JSON.stringify(bundle), function (err) {
-                                    if (err) { log.error(err.toString()); }
-                                    Project.create(project, extra, jobs);
-                                    return res.json(response);
-                                });
-                            });
+                            Project.create(project, extra, jobs);
+                            return res.json(response);
                         } else {
                             return res.json(response);
                         }
