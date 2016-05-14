@@ -1,9 +1,9 @@
 node_modules
 storage
+temp
 .vagrant
 .DS_Store
 npm-debug.log
-temp/**
 dump.rdb
 db
 *.tar.gz
