@@ -13,14 +13,24 @@ module.exports = function(grunt) {
                         type: 'remote',
                         src: 'http://localhost:8872',
                         dest: 'main.png',
-                        delay: 2000
+                        delay: 500
                     }, {
                         type: 'remote',
                         src: 'http://localhost:8872/bundles',
+                        dest: 'bundles.png',
+                        delay: 500
+                    },{
+                        type: 'remote',
+                        src: 'http://localhost:8872/ui/granary-sample/development-3bf358bbb935b94ab33536f2ae805e99.tar.gz',
                         dest: 'bundle.png',
-                        delay: 2000
+                        delay: 500
+                    },{
+                        type: 'remote',
+                        src: 'http://localhost:8872/ui/nope/nope',
+                        dest: 'bundle-error.png',
+                        delay: 500
                     }],
-                    viewport: ['1920x1080']
+                    viewport: ['1920x1080','1024x768','640x960', '320x480']
                 }
             }
         },
@@ -40,4 +50,5 @@ module.exports = function(grunt) {
         }
     });
     grunt.registerTask('build', ['screenshot', 'pug']);
+    grunt.registerTask('default', ['build']);
 }

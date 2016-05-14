@@ -1,0 +1,17 @@
+extends layout
+
+block head
+    meta(http-equiv='refresh', content='20')
+
+block content
+    h3.text-center #{bundle.hash}
+    br
+    div.row
+        div.col-md-2
+        div.col-md-8
+            for value, key in bundle 
+                if key !== '__v'
+                    div.panel.panel-default
+                        div.panel-heading #{key}
+                        div.panel-body #{value}
+        div.col-md-2
