@@ -2,10 +2,16 @@
 var convict = require('convict');
 var fs = require('fs');
 var crypto = require('crypto');
+var bunyan = require('bunyan');
 
 module.exports = function () {
 
-  // Check if we need to auto configure for a fast start.
+  var logger = bunyan.createLogger({
+      name: 'granary-server',
+      stream: process.stdout,
+      level: 'info'
+    });
+
   var env = process.env.NODE_ENV || 'dev';
   var configFile = process.env.GRANARY_CONFIG || __dirname + '/' + env + '.json';
 
@@ -14,17 +20,15 @@ module.exports = function () {
       var hash = crypto.createHash('sha1').update(buf).digest('hex');
 
       // TODO: refactor
-      // TODO: use logger and not console
-      console.log('***** NOTICE ****** \n');
-      console.log('You are missing "' + configFile + '"');
-      console.log('Creating a configuration automatically for you....');
-      console.log('Your Granary Server password is: \n');
-      console.log(hash);
-      console.log('\n Use the password above to generate bundles.');
-      var defaultFile = {
+      logger.info('***** NOTICE ******');
+      logger.info('You are missing "' + configFile);
+      logger.info('Creating a configuration automatically for you....');
+      logger.info('Your Granary Server password is: ', hash);
+      logger.info('Use the password above to generate bundles.');
+      var defaultFile = JSON.stringify({
           "password": hash
-      };
-      fs.writeFileSync(configFile, JSON.stringify(defaultFile), null, 4);
+      });
+      fs.writeFileSync(configFile, defaultFile, null, 4);
   }
 
   var conf = convict({
@@ -109,8 +113,12 @@ module.exports = function () {
     }
   });
 
+  logger.level(conf.get('log').level);
   conf.loadFile(configFile);
   conf.validate();
 
-  return conf;
+  return {
+      conf: conf,
+      logger: logger
+  };
 };

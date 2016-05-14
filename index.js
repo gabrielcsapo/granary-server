@@ -1,11 +1,10 @@
 var express = require('express');
 var path = require('path');
 var mkdirp = require('mkdirp');
-var conf = require('./config/config')();
-var log = require('./lib/log')(conf);
+var conf = require('./config/config')().conf;
+var log = require('./config/config')().logger;
 var app = express();
 
-// TODO: no, remove globals
 app.conf = conf;
 app.log = log;
 
