@@ -49,6 +49,7 @@ module.exports = function(app, log, conf) {
     }));
 
     // TODO: need to have these routes protected by the basic auth route (right now they have their own password checking...)
+    // TODO: refactor this out into routes/api.js
     app.post('/granary/check', Granary.check);
     app.post('/granary/download', Granary.download);
     app.post('/granary/stats', Granary.stats);
@@ -57,6 +58,7 @@ module.exports = function(app, log, conf) {
     // TODO: this should not be all pages
     app.use(Auth.middleware);
 
+    // TODO: refactor this out into routes/ui.js
     app.get('/', UI.usage, function(req, res) {
         req.data.marked = marked;
         res.render('index', req.data);
@@ -70,6 +72,7 @@ module.exports = function(app, log, conf) {
         res.render('queue');
     });
 
+    // TODO: refactor this into routes/stats.js
     app.get('/stats', function(req, res) {
         res.render('stats');
     });
@@ -80,12 +83,14 @@ module.exports = function(app, log, conf) {
         });
     })
 
+    // TODO: split the ui routes into another file
     app.get('/ui/:folder/:file', function(req, res) {
         var folder = req.params.folder;
         var file = req.params.file;
         fs.exists(path.join(conf.get('storage'), folder, file), function(exists) {
             if(exists) {
                 Project.get(path.join(folder, file)).then(function(bundle) {
+                    // Refactor this out into project.getDetails
                     bundle = bundle.toObject();
                     var client_time;
                     bundle.client_stats.forEach(function(cs) {

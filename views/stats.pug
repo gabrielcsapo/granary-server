@@ -11,10 +11,12 @@ block content
     div.row
         div.col-md-3
         div.col-md-6.text-center
+            //- TODO: iterate over stats object instead of hardcoding
             div(id="downloads_over_time" style="padding:15px;border:1px solid #dedede;height:250px;")
         div.col-md-3
 
     script.
+        //- TODO: need to be able to reuse this logic
         $(function() {
             $.getJSON('/stats/downloads_over_time', function(data) {
 

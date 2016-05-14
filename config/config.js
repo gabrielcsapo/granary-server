@@ -2,6 +2,7 @@
  * Default Configuration.
  * See https://github.com/mozilla/node-convict/blob/master/README.md for details.
  */
+ // TODO: refactor this out
 var convict = require('convict');
 
 module.exports = function () {
@@ -10,6 +11,7 @@ module.exports = function () {
   var env = process.env.NODE_ENV || 'dev';
   var configFile = process.env.GRANARY_CONFIG || __dirname + '/' + env + '.json';
 
+  // TODO: refactor this code into config.js no reason to have it in another folder
   require('./autoconfig')(configFile);
 
   var conf = convict({

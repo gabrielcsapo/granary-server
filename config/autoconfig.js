@@ -9,6 +9,7 @@ module.exports = function(expectedConfigFile) {
         var hash = crypto.createHash('sha1').update(buf).digest('hex');
 
         // TODO: refactor
+        // TODO: use logger and not console 
         console.log('***** NOTICE ****** \n');
         console.log('You are missing "' + expectedConfigFile + '"');
         console.log('Creating a configuration automatically for you....');
