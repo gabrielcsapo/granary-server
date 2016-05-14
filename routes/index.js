@@ -5,9 +5,9 @@ var bodyParser = require('body-parser');
 
 module.exports = function(app, log, conf) {
     var Auth = require('../lib/auth')(log, conf);
-    var Project = require('../controllers/project')(app, log, conf);
-    var Granary = require('../controllers/granary')(app, log, conf);
-    var UI = require('../controllers/ui')(app, log, conf);
+    var Project = require('../controllers/project')(log, conf);
+    var Granary = require('../controllers/granary')(log, conf);
+    var UI = require('../controllers/ui')(log, conf);
 
     app.use(bodyParser.json({
         limit: conf.get('limit') + 'kb'
@@ -28,20 +28,11 @@ module.exports = function(app, log, conf) {
         if(req.route) {
             if(req.route.path == '/ui/download/:folder/:file') {
                 file = req.originalUrl.replace('/ui/download/', '');
-                app.db.get(file+'-download-time', function(err, value) {
-                    if (err) {
-                        app.db.put(file+'-download-time', time, function(err) {
-                            if (err) { log.error(err.toString()); }
-                            return;
-                        });
-                    } else {
-                        value = parseInt(value);
-                        value += time;
-                        app.db.put(file+'-download-time', value, function(err) {
-                            if (err) { log.error(err.toString()); }
-                            return;
-                        });
-                    }
+                Project.get(file).then(function(project) {
+                    project.download_time = project.download_time ? project.download_time + time : time;
+                    project.save(function(err) {
+                        console.log(err);
+                    });
                 });
             } else if(req.route.path == '/granary/download') {
                 var project = Project.getDetails(req.body);
@@ -50,20 +41,11 @@ module.exports = function(app, log, conf) {
                     file = project.productionBundlePath;
                 }
                 file = file.substring(file.indexOf(project.name), file.length);
-                app.db.get(file+'-download-time', function(err, value) {
-                    if (err) {
-                        app.db.put(file+'-download-time', time, function(err) {
-                            if (err) { log.error(err.toString()); }
-                            return;
-                        });
-                    } else {
-                        value = parseInt(value);
-                        value += time;
-                        app.db.put(file+'-download-time', value, function(err) {
-                            if (err) { log.error(err.toString()); }
-                            return;
-                        });
-                    }
+                Project.get(file).then(function(project) {
+                    project.download_time = project.download_time ? project.download_time + time : time;
+                    project.save(function(err) {
+                        console.log(err);
+                    });
                 });
             }
         }
@@ -82,7 +64,7 @@ module.exports = function(app, log, conf) {
 
     app.get('/ui/download/:folder/:file', Auth.middleware, UI.download);
     // TODO: temporary, quick way to add delete
-    app.get('/ui/delete/:folder/:file', Auth.middleware, UI.delete);
+    app.get('/ui/delete/:folder/:file', Auth.logout, Auth.middleware, UI.delete);
 
     app.use('/granaries', kue.app);
 
