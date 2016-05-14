@@ -13,5 +13,8 @@ block content
                 if key !== '__v'
                     div.panel.panel-default
                         div.panel-heading #{key}
-                        div.panel-body #{value}
+                        if typeof(value) == 'object'
+                            div.panel-body=JSON.stringify(value)
+                        else    
+                            div.panel-body #{value}
         div.col-md-2
