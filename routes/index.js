@@ -6,7 +6,7 @@ var responseTime = require('response-time');
 var bodyParser = require('body-parser');
 
 module.exports = function(app, log, conf) {
-    var Auth = require('../lib/auth')(log, conf);
+    var Auth = require('../lib/auth')();
     var Project = require('../lib/project')(log, conf);
     var Stats = require('../lib/stats')(log);
     var Granary = require('../lib/granary')(log, conf);
