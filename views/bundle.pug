@@ -9,12 +9,12 @@ block content
     div.row
         div.col-md-2
         div.col-md-8
-            for value, key in bundle 
+            for value, key in bundle
                 if key !== '__v'
                     div.panel.panel-default
                         div.panel-heading #{key}
                         if typeof(value) == 'object'
-                            div.panel-body=JSON.stringify(value)
-                        else    
-                            div.panel-body #{value}
+                            div.panel-body!=JSON.stringify(value)
+                        else
+                            div.panel-body!=value
         div.col-md-2

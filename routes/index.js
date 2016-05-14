@@ -71,7 +71,18 @@ module.exports = function(app, log, conf) {
         fs.exists(path.join(conf.get('storage'), folder, file), function(exists) {
             if(exists) {
                 Project.get(path.join(folder, file)).then(function(bundle) {
-                    res.render('bundle', {bundle: bundle.toObject()});
+                    bundle = bundle.toObject();
+                    var client_time;
+                    bundle.client_stats.forEach(function(cs) {
+                        client_time =+ cs.total_time;
+                    });
+                    var total_time = (bundle.npm_time ? bundle.npm_time : 0) + (bundle.bower_time ? bundle.bower_time : 0);
+                    client_time = client_time ? client_time / bundle.client_stats.length : total_time;
+
+                    bundle.install_time_saved = total_time - client_time;
+                    bundle.npm_logs = bundle.npm_logs.join('<br>');
+                    bundle.bower_logs = bundle.bower_logs.join('<br>');
+                    res.render('bundle', {bundle: bundle});
                 });
             } else {
                 res.render('error', {
