@@ -1,13 +1,15 @@
 var marked = require('marked');
 var kue = require('kue');
+var path = require('path');
+var fs = require('fs');
 var responseTime = require('response-time');
 var bodyParser = require('body-parser');
 
 module.exports = function(app, log, conf) {
     var Auth = require('../lib/auth')(log, conf);
-    var Project = require('../controllers/project')(log, conf);
-    var Granary = require('../controllers/granary')(log, conf);
-    var UI = require('../controllers/ui')(log, conf);
+    var Project = require('../lib/project')(log, conf);
+    var Granary = require('../lib/granary')(log, conf);
+    var UI = require('../lib/ui')(log, conf);
 
     app.use(bodyParser.json({
         limit: conf.get('limit') + 'kb'
@@ -30,9 +32,7 @@ module.exports = function(app, log, conf) {
                 file = req.originalUrl.replace('/ui/download/', '');
                 Project.get(file).then(function(project) {
                     project.download_time = project.download_time ? project.download_time + time : time;
-                    project.save(function(err) {
-                        console.log(err);
-                    });
+                    project.save();
                 });
             } else if(req.route.path == '/granary/download') {
                 var project = Project.getDetails(req.body);
@@ -43,9 +43,7 @@ module.exports = function(app, log, conf) {
                 file = file.substring(file.indexOf(project.name), file.length);
                 Project.get(file).then(function(project) {
                     project.download_time = project.download_time ? project.download_time + time : time;
-                    project.save(function(err) {
-                        console.log(err);
-                    });
+                    project.save();
                 });
             }
         }
@@ -62,8 +60,25 @@ module.exports = function(app, log, conf) {
         res.render('bundles', req.data);
     });
 
+    app.get('/ui/:folder/:file', function(req, res) {
+        var folder = req.params.folder;
+        var file = req.params.file;
+        fs.exists(path.join(conf.get('storage'), folder, file), function(exists) {
+            if(exists) {
+                Project.get(path.join(folder, file)).then(function(bundle) {
+                    res.render('bundle', {bundle: bundle.toObject()});
+                });
+            } else {
+                res.render('error', {
+                  message: 'Bundle does not exist',
+                  error: {
+                      status: 404
+                  }
+                });
+            }
+        });
+    });
     app.get('/ui/download/:folder/:file', Auth.middleware, UI.download);
-    // TODO: temporary, quick way to add delete
     app.get('/ui/delete/:folder/:file', Auth.logout, Auth.middleware, UI.delete);
 
     app.use('/granaries', kue.app);
