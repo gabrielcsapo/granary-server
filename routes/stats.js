@@ -9,6 +9,11 @@ module.exports = function(app) {
         Stats.get().then(function(stats) {
             res.send(stats.downloads_over_time);
         });
-    })
-    // TODO: add route for create requests
+    });
+
+    app.get('/stats/creates_over_time', function(req, res) {
+        Stats.get().then(function(stats) {
+            res.send(stats.creates_over_time);
+        });
+    });
 }
