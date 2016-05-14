@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         screenshot: {
             granary: {
                 options: {
-                    path: './doc',
+                    path: './screenshot',
                     files: [{
                         type: 'remote',
                         src: 'http://localhost:8872',

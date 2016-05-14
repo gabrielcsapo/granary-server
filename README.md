@@ -6,7 +6,7 @@
 
 # Screenshots
 
-[screenshots](doc)
+[screenshots](screenshots)
 
 # Contributions
 
