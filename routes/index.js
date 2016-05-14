@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 module.exports = function(app, log, conf) {
     var Auth = require('../lib/auth')(log, conf);
     var Project = require('../lib/project')(log, conf);
+    var Stats = require('../lib/stats')(log);
     var Granary = require('../lib/granary')(log, conf);
     var UI = require('../lib/ui')(log, conf);
 
@@ -19,21 +20,16 @@ module.exports = function(app, log, conf) {
         extended: true
     }));
 
-
-    // TODO: need to have these routes protected by the basic auth route (right now they have their own password checking...)
-    app.post('/granary/check', Granary.check);
-    app.post('/granary/download', Granary.download);
-    app.post('/granary/stats', Granary.stats);
-    app.post('/granary/track', Granary.track);
-
     app.use(responseTime(function(req, res, time) {
         var file;
         if(req.route) {
             if(req.route.path == '/ui/download/:folder/:file') {
                 file = req.originalUrl.replace('/ui/download/', '');
-                Project.get(file).then(function(project) {
-                    project.download_time = project.download_time ? project.download_time + time : time;
-                    project.save();
+                Stats.addDownloadStat(time).then(function(){
+                    Project.get(file).then(function(project) {
+                        project.download_time = project.download_time ? project.download_time + time : time;
+                        project.save();
+                    });
                 });
             } else if(req.route.path == '/granary/download') {
                 var project = Project.getDetails(req.body);
@@ -42,14 +38,23 @@ module.exports = function(app, log, conf) {
                     file = project.productionBundlePath;
                 }
                 file = file.substring(file.indexOf(project.name), file.length);
-                Project.get(file).then(function(project) {
-                    project.download_time = project.download_time ? project.download_time + time : time;
-                    project.save();
+                Stats.addDownloadStat(time).then(function(){
+                    Project.get(file).then(function(project) {
+                        project.download_time = project.download_time ? project.download_time + time : time;
+                        project.save();
+                    });
                 });
             }
         }
     }));
 
+    // TODO: need to have these routes protected by the basic auth route (right now they have their own password checking...)
+    app.post('/granary/check', Granary.check);
+    app.post('/granary/download', Granary.download);
+    app.post('/granary/stats', Granary.stats);
+    app.post('/granary/track', Granary.track);
+
+    // TODO: this should not be all pages
     app.use(Auth.middleware);
 
     app.get('/', UI.usage, function(req, res) {
@@ -64,6 +69,16 @@ module.exports = function(app, log, conf) {
     app.get('/queue', function(req, res) {
         res.render('queue');
     });
+
+    app.get('/stats', function(req, res) {
+        res.render('stats');
+    });
+
+    app.get('/stats/downloads_over_time', function(req, res) {
+        Stats.get().then(function(stats) {
+            res.send(stats.downloads_over_time);
+        });
+    })
 
     app.get('/ui/:folder/:file', function(req, res) {
         var folder = req.params.folder;

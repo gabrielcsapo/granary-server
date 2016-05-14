@@ -34,6 +34,11 @@ module.exports = function(grunt) {
                         src: 'http://localhost:8872/ui/nope/nope',
                         dest: 'bundle-error.png',
                         delay: 500
+                    },{
+                        type: 'remote',
+                        src: 'http://localhost:8872/stats',
+                        dest: 'stats.png',
+                        delay: 1000
                     }],
                     viewport: ['1920x1080','1024x768','640x960', '320x480']
                 }
