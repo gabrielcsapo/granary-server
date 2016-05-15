@@ -23,7 +23,6 @@
     "express": "^4.13.4",
     "filesize": "^3.3.0",
     "granary": "*",
-    "grunt-contrib-pug": "^1.0.0",
     "highcharts": "^4.2.5",
     "install": "^0.7.3",
     "jquery": "^2.2.3",
