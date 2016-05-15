@@ -3,7 +3,7 @@ var fs = require('fs');
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-screenshot');
-    
+
     grunt.initConfig({
         screenshot: {
             granary: {
@@ -45,6 +45,7 @@ module.exports = function(grunt) {
             }
         }
     });
+    
     grunt.registerTask('build', ['screenshot']);
     grunt.registerTask('default', ['build']);
 }
