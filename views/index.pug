@@ -24,17 +24,17 @@ block content
         hr
         h3.text-center What is Granary?
         br
-        div.text-center 
+        div.text-center
             i Granary is an NPM / Bower bundling Server
         br
         small
             i problem
-        div 
-            | It does not replace NPM or bower when it comes to depency maintance. 
+        div
+            | It does not replace NPM or bower when it comes to depency maintance.
             | Granary is a project bundler. When developing Node.js applications NPM is widely used for package depencies.
             | Depending on the speed of your internet NPM might take quite a while to multiplex your downloads and compile them to finally begin development.
         br
-        small 
+        small
             i solution
         div
             span!=marked("Granary helps by being deployed on cloud provider and access to high speed internet it will bundle your npm and bower dependencies and send them to you as one gzipped folder which it will unpack into the corresponding `node_modules` and `bower_components` directories ready to use.")
@@ -44,16 +44,16 @@ block content
         div!=marked("In order to give a speed comparison I will compare basic `time NODE_ENV=production npm install` and then an install from `Granary Server`")
         table.table.table-responsive
             thead
-                tr 
+                tr
                     th NPM
                     th Granary Server
             tbody
                 tr
-                    th 
+                    th
                         span!=marked("`time NODE_ENV=production npm install`")
                         span!=marked("`real	1m7.121s`")
                     th
-                        span!=marked("`granary -u=https://granary-server.herokuapp.com --production`")
+                        span!=marked("`granary -u=http://granaryjs.com --production`")
                         span!=marked("`Downloading bundle: |||||||||||||||||||| 100% 0.0s 7.95 MB`")
                         span!=marked("`Extracting bundle...`")
                         span!=marked("`Running NPM rebuild...`")
@@ -80,11 +80,11 @@ block content
             div.col-md-6
                 pre
                     code
-                        | granary -u=http://localhost:8872 
+                        | granary -u=http://localhost:8872
         hr
         div.row
             div.col-md-6
-                | Granary also allows you to specify production bundle 
+                | Granary also allows you to specify production bundle
             div.col-md-6
                 pre
                     code
@@ -110,14 +110,14 @@ block content
                     code
                         | brew install redis
                 small
-                    i apt 
+                    i apt
                 pre
                     code
                         | sudo apt-get -y install redis-server;
         hr
         div.row
             div.col-md-6
-                | Install node dependencies 
+                | Install node dependencies
             div.col-md-6
                 pre
                     code
@@ -145,11 +145,11 @@ block content
             div.col-md-6
                 | Password
             div.col-md-6
-                span!=marked('Freight Server automatically configures a password for you. You can change it by modifying the [dev.json](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js) file.')
-                span!=marked('A password setting of `""` (empty string) indicates that the Freight Server will not require a password for any actions.')
+                span!=marked('Granary Server automatically configures a password for you. You can change it by modifying the [dev.json](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js) file.')
+                span!=marked('A password setting of `""` (empty string) indicates that the Granary Server will not require a password for any actions.')
                 span!=marked('Server will start on port `8872`. You should be able to navigate to the dashboard:')
-        div.row 
-            div.col-md-6   
+        div.row
+            div.col-md-6
                 | Configuration
             div.col-md-6
-                span!=marked("See [config/config.js](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js#L11) for available configuration options and environment variables. The Freight Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.")
+                span!=marked("See [config/config.js](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js#L11) for available configuration options and environment variables. The Granary Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.")
