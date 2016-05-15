@@ -8,6 +8,14 @@
 
 [screenshots](screenshots)
 
+# Install
+
+```
+vagrant up;
+vagrant ssh;
+npm start;
+```
+
 # Contributions
 
 > all contributions are welcome and wanted

@@ -3,7 +3,7 @@ var fs = require('fs');
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-screenshot');
-    grunt.loadNpmTasks('grunt-contrib-pug');
+
     grunt.initConfig({
         screenshot: {
             granary: {
@@ -43,22 +43,9 @@ module.exports = function(grunt) {
                     viewport: ['1920x1080','1024x768','640x960', '320x480']
                 }
             }
-        },
-        pug: {
-            compile: {
-                options: {
-                    data: {
-                        presentation: true,
-                        marked: require('marked'),
-                        src: fs.readFileSync(path.join(__dirname, 'views/static/img/logo.png')).toString('base64')
-                    }
-                },
-                files: {
-                    'index.html': ['views/index.pug']
-                }
-            }
         }
     });
-    grunt.registerTask('build', ['screenshot', 'pug']);
+    
+    grunt.registerTask('build', ['screenshot']);
     grunt.registerTask('default', ['build']);
 }

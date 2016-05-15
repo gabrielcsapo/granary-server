@@ -3,18 +3,14 @@ extends layout
 block content
     div.container
         br
-        if(!presentation)
-            blockquote
-                p
-                    | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
-                small
-                    | Granary Server
+        blockquote
+            p
+                | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
+            small
+                | Granary Server
         div.jumbotron.intro.text-center
             h1 Granary Server
-            if(src)
-                img.logo(alt='Granary Server', src='data:img/png;base64,#{src}')
-            else
-                img.logo(src='/static/img/logo.svg', alt='Granary Server')
+            img.logo(src='/static/img/logo.svg', alt='Granary Server')
             br
             a(href="https://github.com/gabrielcsapo/granary" target="_blank").btn.btn-primary
                 | Client Source
