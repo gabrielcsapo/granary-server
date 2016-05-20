@@ -12,6 +12,7 @@ source ~/.profile;
 
 nvm install 4;
 npm install npm@3;
+npm install forever;
 
 echo '\n Installing Mongodb \n'
 
