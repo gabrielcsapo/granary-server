@@ -2,18 +2,22 @@ var Stats = require('../lib/stats')();
 
 module.exports = function(app) {
     app.get('/stats', function(req, res) {
-        res.render('stats');
+        res.render('stats', {stats: Stats.stats()});
     });
 
-    app.get('/stats/downloads_over_time', function(req, res) {
-        Stats.get().then(function(stats) {
-            res.send(stats.downloads_over_time);
+    Stats.stats().forEach(function(stat) {
+        app.get('/stats/' + stat, function(req, res) {
+            Stats.get().then(function(stats) {
+                var cols = [];
+                cols[0] = ['x'];
+                cols[1] = ['time'];
+                stats[stat].forEach(function(s) {
+                    cols[0].push(s[0]);
+                    cols[1].push(s[1]);
+                });
+                res.send(cols);
+            });
         });
     });
 
-    app.get('/stats/creates_over_time', function(req, res) {
-        Stats.get().then(function(stats) {
-            res.send(stats.creates_over_time);
-        });
-    });
 }

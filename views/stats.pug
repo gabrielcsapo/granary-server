@@ -1,20 +1,60 @@
 extends layout
 
 block head
-    meta(http-equiv='refresh', content='20')
-    script(src="/static/jquery/dist/jquery.min.js")
-    script(src="/static/highcharts/adapters/standalone-framework.js")
-    script(src="/static/highcharts/highcharts.js")
+    script(src="/static/c3/node_modules/d3/d3.min.js")
+    script(src="/static/c3/c3.min.js")
+    style
+        include ../node_modules/c3/c3.min.css
 
 block content
     br
     div.row
         div.col-md-3
         div.col-md-6.text-center
-            //- TODO: iterate over stats object instead of hardcoding
-            div(id="downloads_over_time" style="padding:15px;border:1px solid #dedede;height:250px;")
-            br
-            div(id="creates_over_time" style="padding:15px;border:1px solid #dedede;height:250px;")
+            div(id="stats" data-stats=stats)
+            each stat in stats
+                div(style="padding:15px;border:1px solid #dedede;height:400px;")
+                    h3=stat
+                    div(id=stat)
+                br
         div.col-md-3
 
-    script(src="/static/js/stats.js")
+    script.
+        var getJSON = function(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    callback(JSON.parse(xhr.responseText));
+                }
+            }
+            xhr.send();
+        }
+
+        JSON.parse(document.getElementById('stats').dataset['stats']).forEach(function(stat) {
+            getJSON('/stats/' + stat, function(data) {
+                var chart = c3.generate({
+                    bindto: d3.select('#' + stat),
+                    data: {
+                        x: 'x',
+                        columns: [
+                            data[0],
+                            data[1]
+                        ]
+                    },
+                    axis: {
+                        y : {
+                           tick: {
+                               format: d3.format(".1f")
+                           }
+                       },
+                        x: {
+                            type: 'timeseries',
+                            tick: {
+                                format: '%I:%M:%S'
+                            }
+                        }
+                    }
+                });
+            });
+        });

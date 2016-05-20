@@ -10,9 +10,7 @@ app.log = log;
 app.set('views', path.resolve(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use('/static', express.static(path.resolve(__dirname, 'views/static')));
-// TODO: bleh, this shouldn't be, maybe move highcharts and jquery to static directory? 
-app.use('/static/highcharts', express.static(path.resolve(__dirname, 'node_modules', 'highcharts')));
-app.use('/static/jquery', express.static(path.resolve(__dirname, 'node_modules', 'jquery')));
+app.use('/static/c3', express.static(path.resolve(__dirname, 'node_modules', 'c3')));
 
 require('./routes/index')(app, log, conf);
 
