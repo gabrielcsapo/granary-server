@@ -6,15 +6,16 @@ block head
 block content
     h3.text-center #{bundle.hash}
     br
-    div.row
-        div.col-md-2
-        div.col-md-8
+    div.grid
+        div.col-2-12
+        div.col-8-12
             for value, key in bundle
                 if key !== '__v'
                     div.panel.panel-default
-                        div.panel-heading #{key}
+                        div.panel-header #{key}
                         if typeof(value) == 'object'
                             div.panel-body!=JSON.stringify(value)
                         else
                             div.panel-body!=value
-        div.col-md-2
+                    br
+        div.col-2-12

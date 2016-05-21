@@ -8,16 +8,16 @@ block head
 
 block content
     br
-    div.row
-        div.col-md-3
-        div.col-md-6.text-center
+    div.grid
+        div.col-2-12
+        div.col-8-12.text-center
             div(id="stats" data-stats=stats)
             each stat in stats
                 div(style="padding:15px;border:1px solid #dedede;height:400px;")
                     h3=stat
                     div(id=stat)
                 br
-        div.col-md-3
+        div.col-2-12
 
     script.
         var getJSON = function(url, callback) {
@@ -40,7 +40,8 @@ block content
                         columns: [
                             data[0],
                             data[1]
-                        ]
+                        ],
+                        type: 'scatter'
                     },
                     axis: {
                         y : {

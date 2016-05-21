@@ -46,27 +46,13 @@ module.exports = function(app, log, conf) {
     require('./stats')(app);
     require('./ui')(app);
 
-    app.use(function (req, res, next) {
-      var err = new Error('Not Found');
-      err.status = 404;
-      next(err);
-    });
-
-    if (app.get('env') === 'development') {
-      app.use(function (err, req, res) {
-        res.status(err.status || 500);
+    app.use(function (req, res) {
+        log.error('ROUTES:ERROR', {url: req.originalUrl});
         res.render('error', {
-          message: err.message,
-          error: err
+          message: 'Sorry this page does not exist',
+          error: {
+              status: 'please head back to the main pages or contact system administrator for more info'
+          }
         });
-      });
-    }
-
-    app.use(function (err, req, res) {
-      res.status(err.status || 500);
-      res.render('error', {
-        message: err.message,
-        error: {}
-      });
     });
 };

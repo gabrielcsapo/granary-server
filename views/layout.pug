@@ -5,26 +5,18 @@ html
         title= title
         block head
         style
-            include ../node_modules/bootstrap/dist/css/bootstrap.css
+            include ../node_modules/psychic-ui/psychic-min.css
         style
             include ./static/css/main.css
     body
         div.container
-            div(class="header clearfix")
-                if(!presentation)
-                    nav
-                      ul(class="nav nav-pills pull-right")
-                        li
-                            a(href="/") Home
-                        li
-                            a(href="/bundles") Bundles
-                        li
-                            a(href="/queue") Queue
-                        li
-                            a(href="/stats") Stats
-                h3(class="text-muted") Granary Server
+            div.navbar
+                div.container
+                    div.navbar-title
+                        span
+                            a(href="/") Granary
+                    div.nav
+                        a(href="/bundles") Bundles
+                        a(href="/queue") Queue
+                        a(href="/stats") Stats
         block content
-        script
-            include ../node_modules/jquery/dist/jquery.min.js
-        script
-            include ../node_modules/bootstrap/dist/js/bootstrap.min.js

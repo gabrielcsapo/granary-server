@@ -4,13 +4,13 @@ block head
     meta(http-equiv='refresh', content='20')
 
 block content
-    div.row
-        div.col-md-1
-        div.col-md-10
+    div.grid
+        div.col-1-12
+        div.col-10-12
             h1 Bundles
             each project, name in projects
                 h3 #{name}
-                table.table.table-striped.table-hover.table-responsive
+                table.table.responsive
                     thead
                         tr
                             th Bundle Name
@@ -31,7 +31,7 @@ block content
                                 td=file.avg_time
                                 td=file.bundle
                                 td
-                                    a.btn.btn-sm.btn-info(type='button', href='/ui/' + name + '/' + file.name) Info
-                                    a.btn.btn-sm.btn-warning(type='button', href='/ui/delete/' + name + '/' + file.name) Delete
-                                    a.btn.btn-sm.btn-success(type='button', href='/ui/download/' + name + '/' + file.name) Download
-        div.col-md-1
+                                    a.btn.btn-info(href='/ui/' + name + '/' + file.name) Info
+                                    a.btn.btn-warning(href='/ui/delete/' + name + '/' + file.name) Delete
+                                    a.btn.btn-success(href='/ui/download/' + name + '/' + file.name) Download
+        div.col-1-12

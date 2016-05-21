@@ -39,13 +39,18 @@ module.exports = function(grunt) {
                         src: 'http://localhost:8872/stats',
                         dest: 'stats.png',
                         delay: 1000
+                    },{
+                        type: 'remote',
+                        src: 'http://localhost:8872/thispagedoesnotexist',
+                        dest: '404.png',
+                        delay: 1000
                     }],
                     viewport: ['1920x1080','1024x768','640x960', '320x480']
                 }
             }
         }
     });
-    
+
     grunt.registerTask('build', ['screenshot']);
     grunt.registerTask('default', ['build']);
 }

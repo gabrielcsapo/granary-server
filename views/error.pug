@@ -2,11 +2,11 @@ extends layout
 
 block content
     div.row
-        div.col-md-2
-        div.col-md-8.text-center
+        div.col-2-12
+        div.col-8-12.text-center
             i
                 h1=message
             h2=error.status
             if error.stack
                 pre #{error.stack}
-        div.col-md-2
+        div.col-2-12

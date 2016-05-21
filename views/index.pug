@@ -1,14 +1,11 @@
 extends layout
 
 block content
-    div.container
+    div.layout-container
         br
-        blockquote
-            p
-                | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
-            small
-                | Granary Server
-        div.jumbotron.intro.text-center
+        blockquote(style="border-color:#a94442").text-danger
+            | Granary and Granary-Server are under alpha development and have not even reached 0.0.1 status, beware of sharks
+        div.logo-container.text-center
             h1 Granary Server
             img.logo(src='/static/img/logo.svg', alt='Granary Server')
             br
@@ -17,8 +14,11 @@ block content
             | &nbsp;
             a(href="https://github.com/gabrielcsapo/granary-server" target="_blank").btn.btn-info
                 | Server Source
-        blockquote(style="border-color:#a94442").text-danger
-            | Granary and Granary-Server are under alpha development and have not even reached 0.0.1 status, beware of sharks
+        blockquote
+            p
+                | I have #{count.files} bundle(s) and #{count.projects} project(s) at the moment and I'm using around #{process.heap} of memory.
+            small
+                | - Granary Server
         hr
         h3.text-center What is Granary?
         br
@@ -40,7 +40,7 @@ block content
         h3.text-center What are the speed benefits?
         br
         div!=marked("In order to give a speed comparison I will compare basic `time NODE_ENV=production npm install` and then an install from `Granary Server`")
-        table.table.table-responsive
+        table.table.responsive
             thead
                 tr
                     th NPM
@@ -64,44 +64,44 @@ block content
                 | npm install granary -g
         h3.text-center What Does Granary Do?
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Granary can create production and development bundles of your projects
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | granary create -u=http://localhost:8872
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Granary installs the development bundle by default
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | granary -u=http://localhost:8872
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Granary also allows you to specify production bundle
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | granary -u=http://localhost:8872 --production
         hr
         h3.text-center Install your own Server!
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Clone the server
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | git clone https://github.com/gabrielcsapo/granary-server.git
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Install a redis server
-            div.col-md-6
+            div.col-6-12
                 small
                     i brew
                 pre
@@ -113,18 +113,18 @@ block content
                     code
                         | sudo apt-get -y install redis-server;
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Install node dependencies
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | npm install
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Start the server!
-            div.col-md-6
+            div.col-6-12
                 pre
                     code
                         | npm start;
@@ -139,15 +139,15 @@ block content
         h3.text-center Install your own Server!
         h6.text-center Sometimes we need some security
         hr
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Password
-            div.col-md-6
+            div.col-6-12
                 span!=marked('Granary Server automatically configures a password for you. You can change it by modifying the [dev.json](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js) file.')
                 span!=marked('A password setting of `""` (empty string) indicates that the Granary Server will not require a password for any actions.')
                 span!=marked('Server will start on port `8872`. You should be able to navigate to the dashboard:')
-        div.row
-            div.col-md-6
+        div.grid
+            div.col-6-12
                 | Configuration
-            div.col-md-6
+            div.col-6-12
                 span!=marked("See [config/config.js](https://github.com/gabrielcsapo/granary-server/blob/master/config/config.js#L11) for available configuration options and environment variables. The Granary Server uses [node-convict](https://github.com/mozilla/node-convict) to manage configuration.")
