@@ -1,4 +1,10 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
 * {
+    box-sizing: border-box;
     border-radius: 0px !important;
 }
 
@@ -22,4 +28,10 @@
         width:90%;
         margin:0 auto;
     }
+}
+
+.footer {
+    position:absolute;
+    height:80px;
+    bottom:0px;
 }

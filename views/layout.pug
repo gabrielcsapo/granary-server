@@ -6,10 +6,11 @@ html
         block head
         style
             include ../node_modules/psychic-ui/psychic-min.css
+        link(rel="stylesheet" type="text/css" href='/static/font-awesome/css/font-awesome.min.css')
         style
             include ./static/css/main.css
     body
-        div.container
+        div.container(style="min-height: 100%;position: relative;padding-bottom:80px;")
             div.navbar
                 div.container
                     div.navbar-title
@@ -19,4 +20,11 @@ html
                         a(href="/bundles") Bundles
                         a(href="/queue") Queue
                         a(href="/stats") Stats
-        block content
+
+            block content
+
+            div.navbar.footer
+                div.container
+                    div.nav
+                        a(href="https://github.com/gabrielcsapo/granary-server")
+                            i(class="fa fa-3x fa-github")
