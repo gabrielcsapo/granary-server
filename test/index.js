@@ -6,7 +6,7 @@ var cli = '';
 
 describe('granary-server', function() {
 
-    process.GRANARY = 'node ' + path.resolve(require.resolve('granary'), '..', 'bin', 'granary')
+    process.GRANARY = path.resolve('node_modules', '.bin', 'granary')
 
     before(function(done) {
         this.timeout(50000);

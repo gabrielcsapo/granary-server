@@ -5,5 +5,4 @@ module.exports = function(app) {
     app.post('/granary/check', Granary.check);
     app.post('/granary/download', Granary.download);
     app.post('/granary/stats', Granary.stats);
-    app.post('/granary/track', Granary.track);
 }

@@ -1,2 +1,1 @@
-require('./cli');
 require('./create');
