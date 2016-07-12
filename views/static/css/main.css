@@ -2,36 +2,32 @@ html, body {
     height: 100%;
     width: 100%;
 }
-
 * {
     box-sizing: border-box;
     border-radius: 0px !important;
 }
-
 .logo-container {
     background-color: #eee;
     border: 1px solid #d6d3d3;
     padding: 15px;
     margin-bottom: 20px;
 }
-.logo-container > .logo {
+.logo-container> .logo {
     height: 250px;
 }
-
 .layout-container {
-    width:50%;
-    margin:0 auto;
+    width: 50%;
+    margin: 0 auto;
 }
-
 @media (width: 320px), (width: 640px) {
     .layout-container {
-        width:90%;
-        margin:0 auto;
+        width: 90%;
+        margin: 0 auto;
     }
 }
 
 .footer {
-    position:absolute;
-    height:80px;
-    bottom:0px;
+    position: absolute;
+    height: 80px;
+    bottom: 0px;
 }

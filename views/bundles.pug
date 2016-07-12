@@ -29,7 +29,7 @@ block content
                                 td=file.details.size
                                 td=file.download_count
                                 td=file.avg_time
-                                td=file.bundle
+                                td(style="max-width:50px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;")=file.bundle
                                 td
                                     a.btn.btn-info(href='/ui/' + name + '/' + file.name) Info
                                     a.btn.btn-warning(href='/ui/delete/' + name + '/' + file.name) Delete

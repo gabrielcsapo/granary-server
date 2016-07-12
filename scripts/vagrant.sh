@@ -11,7 +11,7 @@ curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh;
 source ~/.profile;
 
 nvm install 4;
-npm install npm@3;
+npm install npm@3 -g;
 npm install forever;
 
 echo '\n Installing Mongodb \n'
