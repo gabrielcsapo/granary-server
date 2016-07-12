@@ -13,6 +13,7 @@ module.exports = function(app) {
 
     app.get('/', UI.usage, function(req, res) {
         req.data.marked = marked;
+        req.data.url = req.protocol + '://' + req.headers.host;
         res.render('index', req.data);
     });
 

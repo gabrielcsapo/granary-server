@@ -51,7 +51,7 @@ block content
                         span!=marked("`time NODE_ENV=production npm install`")
                         span!=marked("`real	1m7.121s`")
                     th
-                        span!=marked("`granary -u http://granaryjs.com --production`")
+                        span!=marked("`granary -u " + url + " --production`")
                         span!=marked("`Downloading bundle: |||||||||||||||||||| 100% 0.0s 7.95 MB`")
                         span!=marked("`Extracting bundle...`")
                         span!=marked("`Running NPM rebuild...`")
@@ -70,7 +70,7 @@ block content
             div.col-6-12
                 pre
                     code
-                        | granary create -u http://localhost:8872
+                        | granary create -u #{url}
         hr
         div.grid
             div.col-6-12
@@ -78,7 +78,7 @@ block content
             div.col-6-12
                 pre
                     code
-                        | granary -u http://localhost:8872
+                        | granary -u #{url}
         hr
         div.grid
             div.col-6-12
@@ -86,9 +86,10 @@ block content
             div.col-6-12
                 pre
                     code
-                        | granary -u http://localhost:8872 --production
+                        | granary -u #{url} --production
         hr
         h3.text-center Install your own Server!
+        h6.text-center Sometimes we need some security
         hr
         div.grid
             div.col-6-12
@@ -136,8 +137,7 @@ block content
                     code
                         | GRANARY_CONFIG=/ npm start;
         hr
-        h3.text-center Install your own Server!
-        h6.text-center Sometimes we need some security
+        h3.text-center Extra Configuration
         hr
         div.grid
             div.col-6-12
