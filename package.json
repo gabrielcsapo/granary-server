@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.0.1",
+    "eslint": "^3.2.2",
     "grunt": "^1.0.1",
     "grunt-screenshot": "^0.6.0",
     "mocha": "^2.4.5"
