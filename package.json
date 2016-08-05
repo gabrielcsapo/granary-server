@@ -11,7 +11,7 @@
   "main": "./bin/granary-server",
   "license": "ISC",
   "dependencies": {
-    "archiver": "^1.0.0",
+    "archiver": "^1.0.1",
     "async": "^2.0.0",
     "basic-auth": "^1.0.3",
     "bluebird": "^3.4.0",
