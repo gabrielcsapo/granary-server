@@ -26,7 +26,7 @@
     "font-awesome": "^4.6.1",
     "granary": "^0.2.1",
     "kue": "^0.11.0",
-    "marked": "^0.3.5",
+    "marked": "^0.3.6",
     "mkdirp": "^0.5.1",
     "moment": "^2.13.0",
     "mongoose": "^4.5.8",
