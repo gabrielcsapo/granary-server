@@ -6,7 +6,7 @@
 
 # Screenshots
 
-[screenshots](screenshots)
+[screenshots](screenshot)
 
 # Install
 
