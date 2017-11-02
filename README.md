@@ -1,3 +1,5 @@
+> DEPRECATED: THIS WILL NO LONGER BE UNDER DEVELOPMENT
+
 # [granary-server](http://gabrielcsapo.github.io/granary-server/) [![Build Status](https://travis-ci.org/gabrielcsapo/granary-server.svg?branch=master)](https://travis-ci.org/gabrielcsapo/granary-server) [![Dependency Status](https://david-dm.org/gabrielcsapo/granary-server.svg)](https://david-dm.org/gabrielcsapo/granary-server) [![devDependency Status](https://david-dm.org/gabrielcsapo/granary-server/dev-status.svg)](https://david-dm.org/gabrielcsapo/granary-server#info=devDependencies)
 
 > based on https://github.com/node-freight/freight-server
